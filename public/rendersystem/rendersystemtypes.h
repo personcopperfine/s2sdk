@@ -29,6 +29,15 @@ enum RenderMultisampleType_t : uint8
 };
 
 DECLARE_POINTER_HANDLE(SwapChainHandle_t);
+DECLARE_POINTER_HANDLE(VertexBufferHandle_t);
+DECLARE_POINTER_HANDLE(IndexBufferHandle_t);
+
+// AMNOTE: Weak handle to a resource binding; must stay trivially copyable.
+class HRenderTexture
+{
+public:
+	const void *m_pBinding;
+};
 
 struct RenderViewport_t
 {
