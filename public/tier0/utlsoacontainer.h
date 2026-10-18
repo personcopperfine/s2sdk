@@ -128,6 +128,8 @@ enum EAttributeDataType
 	ATTRDATATYPE_4V,			// vector data type, stored as class FourVectors
 	ATTRDATATYPE_INT,			// integer. not especially sse-able on all architectures.
 	ATTRDATATYPE_POINTER,		// a pointer.
+	// AMNOTE: 8 bytes per element; the BONE_INDICES particle attribute uses it
+	ATTRDATATYPE_UNK001,
 
 	ATTRDATATYPE_COUNT,
 };
