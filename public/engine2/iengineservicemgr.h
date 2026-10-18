@@ -28,7 +28,7 @@ class ISource2WorldSession;
 class ISceneView;
 class IPrerequisite;
 
-DECLARE_POINTER_HANDLE(HSceneViewRenderTarget);
+FORWARD_DECLARE_HANDLE(HSceneViewRenderTarget);
 DECLARE_POINTER_HANDLE(ActiveLoop_t);
 
 enum ClientServerMode_t : int32
