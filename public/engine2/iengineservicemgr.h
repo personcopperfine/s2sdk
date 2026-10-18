@@ -28,7 +28,7 @@ class ISource2WorldSession;
 class ISceneView;
 class IPrerequisite;
 
-DECLARE_POINTER_HANDLE(HSceneViewRenderTarget);
+FORWARD_DECLARE_HANDLE(HSceneViewRenderTarget);
 DECLARE_POINTER_HANDLE(ActiveLoop_t);
 
 enum ClientServerMode_t : int32
@@ -121,6 +121,7 @@ public:
 	virtual void		RegisterEventMap( CEventDispatcher<CEventIDManager_Default> *pEventDispatcher, EventMapRegistrationType_t nRegistrationType ) = 0;
 	virtual uint16		GetServiceIndex( void ) = 0;
 	virtual void		SetServiceIndex( uint16 index ) = 0;
+	virtual ~IEngineService() {}
 };
 
 template< class IInterface >

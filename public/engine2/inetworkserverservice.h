@@ -26,7 +26,6 @@ class IEntityReport;
 abstract_class INetworkServerService : public IEngineService
 {
 public:
-	virtual ~INetworkServerService() {}
 	virtual CNetworkGameServerBase	*GetIGameServer( void ) = 0;
 	virtual bool	IsActiveInGame( void ) const = 0;
 	virtual bool	IsMultiplayer( void ) const = 0;

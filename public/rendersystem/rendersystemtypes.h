@@ -29,6 +29,32 @@ enum RenderMultisampleType_t : uint8
 };
 
 DECLARE_POINTER_HANDLE(SwapChainHandle_t);
+DECLARE_POINTER_HANDLE(VertexBufferHandle_t);
+DECLARE_POINTER_HANDLE(IndexBufferHandle_t);
+DECLARE_POINTER_HANDLE(OsSpecificWindowHandle_t);
+DECLARE_POINTER_HANDLE(RenderQueryHandle_t);
+DECLARE_POINTER_HANDLE(RsRasterizerStateHandle_t);
+DECLARE_POINTER_HANDLE(RsDepthStencilStateHandle_t);
+DECLARE_POINTER_HANDLE(RsBlendStateHandle_t);
+DECLARE_POINTER_HANDLE(RenderInputLayout_t);
+DECLARE_POINTER_HANDLE(RenderResourceHandle_t);
+DECLARE_POINTER_HANDLE(RenderBufferHandle_t);
+DECLARE_POINTER_HANDLE(PooledIndexBufferHandle_t);
+DECLARE_POINTER_HANDLE(ConstantBufferHandle_t);
+DECLARE_POINTER_HANDLE(RenderShaderHandle_t);
+DECLARE_POINTER_HANDLE(RenderSemaphoreHandle_t);
+DECLARE_POINTER_HANDLE(RenderDescriptorSetHandle_t);
+DECLARE_POINTER_HANDLE(SamplerStateHandle_t);
+DECLARE_POINTER_HANDLE(RenderBLASHandle_t);
+DECLARE_POINTER_HANDLE(RenderTLASHandle_t);
+DECLARE_POINTER_HANDLE(RenderRayTracePipelineHandle_t);
+
+// AMNOTE: Weak handle to a resource binding; must stay trivially copyable.
+class HRenderTexture
+{
+public:
+	const void *m_pBinding;
+};
 
 struct RenderViewport_t
 {
