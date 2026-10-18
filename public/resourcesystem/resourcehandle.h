@@ -5,6 +5,7 @@
 #pragma once
 #endif
 
+#include "interfaces/interfaces.h"
 #include "resourcefile/resourcetype.h"
 #include "resourcesystem/resourcesystemtypes.h"
 
@@ -33,5 +34,58 @@ public:
 	virtual ResourceSerialHandle_t unk102( ResourceHandle_t hResource ) = 0;
 	virtual ResourceHandle_t HandleUtils_Deref( ResourceSerialHandle_t hSerial ) = 0;
 };
+
+// AMNOTE: Holds one reference on the binding; releasing the last one passes it to IResourceHandleUtils::DeleteResource
+template < typename T >
+class CStrongHandle
+{
+public:
+	CStrongHandle() : m_pBinding( nullptr ) {}
+	CStrongHandle( const CStrongHandle &other ) : m_pBinding( other.m_pBinding ) { AddRef(); }
+	~CStrongHandle() { Release(); }
+
+	CStrongHandle &operator=( const CStrongHandle &other );
+
+	bool IsValid() const { return m_pBinding != nullptr; }
+	ResourceHandle_t GetBinding() const { return m_pBinding; }
+
+private:
+	void AddRef();
+	void Release();
+
+	ResourceHandle_t m_pBinding;
+};
+
+template < typename T >
+inline CStrongHandle< T > &CStrongHandle< T >::operator=( const CStrongHandle &other )
+{
+	if ( m_pBinding != other.m_pBinding )
+	{
+		Release();
+		m_pBinding = other.m_pBinding;
+		AddRef();
+	}
+	return *this;
+}
+
+template < typename T >
+inline void CStrongHandle< T >::AddRef()
+{
+	if ( m_pBinding )
+		++const_cast< ResourceBindingBase_t * >( m_pBinding )->m_nRefCount;
+}
+
+template < typename T >
+inline void CStrongHandle< T >::Release()
+{
+	if ( m_pBinding && g_pResourceHandleUtils )
+	{
+		ResourceBindingBase_t *pBinding = const_cast< ResourceBindingBase_t * >( m_pBinding );
+		--pBinding->m_nRefCount;
+		if ( pBinding->m_nRefCount == 0 )
+			g_pResourceHandleUtils->DeleteResource( m_pBinding );
+	}
+	m_pBinding = nullptr;
+}
 
 #endif // RESOURCEHANDLE_H
