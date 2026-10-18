@@ -1,0 +1,82 @@
+//===== Copyright (c) 1996-2005, Valve Corporation, All rights reserved. ======//
+//
+// Purpose: Particle system document of the particle editor: the node tree and its undo history
+//
+//===========================================================================//
+
+#ifndef PETDOC_H
+#define PETDOC_H
+#ifdef _WIN32
+#pragma once
+#endif
+
+#include "tier0/keyvalues3.h"
+#include "tier0/utlvector.h"
+#include "tier0/buffer_string.h"
+#include "toolutils2/toolattr.h"
+#include "toolutils2/undohistory.h"
+
+class CPetDoc;
+class CPetRootNode;
+class CPetChildNode;
+class CPetFunctionNode;
+class CPetVariableNode;
+
+// AMNOTE: Incomplete class, only its node class is known
+class CBasePetNode : public CBaseKV3DataWithFGDClass, public IToolAttrNotifyRoot
+{
+public:
+	virtual int unk021() = 0;
+	// AMNOTE: Name of the node's schema class ("CParticleSystemDefinition" for the root, an operator's class)
+	virtual const char *GetClassName() = 0;
+	virtual bool unk121() = 0;
+	virtual bool unk122() = 0;
+	virtual bool unk123() = 0;
+	virtual bool unk124() = 0;
+	// AMNOTE: this when the node is of the class, else NULL
+	virtual CPetChildNode *unk125() = 0;
+	virtual CPetRootNode *unk126() = 0;
+	virtual CPetFunctionNode *unk127() = 0;
+	virtual CPetVariableNode *unk128() = 0;
+	virtual KeyValues3 *unk129() = 0;
+	virtual KeyValues3 *unk1210() = 0;
+	// AMNOTE: Copies the node's KeyValues3 into pOut
+	virtual void unk1211( KeyValues3 *pOut ) = 0;
+	virtual void unk1212( const KeyValues3 *pIn ) = 0;
+	// AMNOTE: False when the node's m_bDisableOperator is set
+	virtual bool unk1213() = 0;
+	virtual void unk1214( bool ) = 0;
+	virtual void unk1215( CBufferString *, CBufferString *, CBufferString * ) = 0;
+
+public:
+	CPetDoc *m_unk001;
+	uint64 m_unk002;
+	KeyValues3 m_unk003;
+};
+
+struct PetDocSelection_t
+{
+	// AMNOTE: Kind of the selected node
+	int m_unk001;
+	int m_unk002;
+};
+
+// AMNOTE: Incomplete class, only the tree, selection and undo members are known
+class CPetDoc : public CBaseUndoable, public IUndoListener
+{
+public:
+	// AMNOTE: Records the document as an undo step
+	virtual void unk021() = 0;
+
+public:
+	uint8 m_unk001[88];
+	CUtlVector< PetDocSelection_t > m_Selection;
+	CPetRootNode *m_pRoot;
+	CUndoHistory *m_pUndoHistory;
+	// AMNOTE: m_pUndoHistory's partner
+	CUndoHistory *m_unk101;
+	// AMNOTE: Caches of the tree, refreshed on undo
+	uint8 m_unk102[56];
+};
+
+#endif // PETDOC_H
