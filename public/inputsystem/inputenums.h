@@ -30,7 +30,8 @@ FORWARD_DECLARE_HANDLE( InputContextHandle_t );
 
 enum
 {
-	MAX_JOYSTICKS = MAX_SPLITSCREEN_CLIENTS,
+	// AMNOTE: The engine supports 4 joysticks even though it has a single splitscreen slot
+	MAX_JOYSTICKS = 4,
 	MOUSE_BUTTON_COUNT = 5,
 };
 
