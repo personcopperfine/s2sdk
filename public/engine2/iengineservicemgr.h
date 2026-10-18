@@ -30,7 +30,7 @@ class ISource2WorldSession;
 class ISceneView;
 class IPrerequisite;
 
-DECLARE_POINTER_HANDLE(HSceneViewRenderTarget);
+FORWARD_DECLARE_HANDLE(HSceneViewRenderTarget);
 
 struct ActiveLoop_t
 {
