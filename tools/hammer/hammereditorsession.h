@@ -20,6 +20,17 @@
 class CMapViewMgr;
 class CHammerEditorSession;
 
+// AMNOTE: Name not known. Hammer's editor settings, one global object
+struct HammerEditorSettings_t
+{
+	uint8 m_unk001[45];
+	bool m_bShowGameObjectsOnly;
+	bool m_bShowVisContributorsOnly;
+	bool m_bShowAcousticGeometryOnly;
+	bool m_bShowToolsMaterials;
+	uint8 m_unk002[3559];
+};
+
 abstract_class IBindableCommandListener
 {
 public:
