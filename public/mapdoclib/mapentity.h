@@ -34,6 +34,18 @@ struct MapEntityConnection_t
 	int m_unk0011;
 };
 
+// AMNOTE: Name not known. A class of an FGD file, 288 bytes
+struct FgdClass_t
+{
+	uint8 m_unk001[12];
+	// AMNOTE: The FGD section the class comes from: 0 none, 1 baseclass, 2 struct, 3 overrideclass, 4 pointclass,
+	// 5 solidclass, 6 npcclass, 7 filterclass, 8 moveclass, 9 keyframeclass, 10 pathclass, 11 pathnodeclass,
+	// 12 cableclass, 13 navlinkclass, 14 choreoanchorclass, 15 modelgamedata, 16 modelbreakcommand,
+	// 17 modelanimevent, 18 vdata, 19 vdataderived
+	int m_nType;
+	uint8 m_unk002[272];
+};
+
 abstract_class IVDataLookupListener
 {
 public:
