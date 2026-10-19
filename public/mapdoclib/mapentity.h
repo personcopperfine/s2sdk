@@ -93,7 +93,7 @@ public:
 public:
 	uint8 m_unk051[24];
 	// AMNOTE: FGD class of the entity class name
-	void *m_pGameDataClass;
+	FgdClass_t *m_pGameDataClass;
 	uint8 m_unk151[4808];
 };
 
