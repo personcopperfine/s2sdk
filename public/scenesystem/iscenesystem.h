@@ -44,7 +44,6 @@ class ISceneLightListener;
 class ISparseShadowTree;
 class IRenderContext;
 class IRenderDevice;
-class CRenderAttributes;
 class IMaterial2;
 class CBufferString;
 class CTextLayoutInfo;
@@ -73,6 +72,13 @@ class CViewId
 public:
 	uint64 m_unk001;
 	int m_unk002;
+};
+
+// AMNOTE: Incomplete class
+class CRenderAttributes
+{
+public:
+	uint8 m_unk001[928];
 };
 
 class ISceneView;
