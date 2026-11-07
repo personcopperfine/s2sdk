@@ -22,7 +22,8 @@ class CBaseEditorSession
 {
 public:
 	virtual ~CBaseEditorSession() = 0;
-	// AMNOTE: Asks to save unsaved changes; returns 1 when there are none
+	// AMNOTE: Asks to save unsaved changes in a modal dialog, none when IsModified is false; returns 0 when cancelled,
+	// 1 when there was nothing to save. With true, discarding the changes also calls SetModified( false )
 	virtual int unk101( bool ) = 0;
 	virtual int unk102() = 0;
 	// AMNOTE: Sets up a new untitled document named pszName
@@ -51,7 +52,7 @@ public:
 	virtual void unk401( CUtlString *pOut ) = 0;
 	// AMNOTE: True when pszFileName is the session's file
 	virtual bool unk402( const char *pszFileName ) = 0;
-	// AMNOTE: unk101( true ) != 0
+	// AMNOTE: Asked before the session closes; false keeps it open. The base returns unk101( true ) != 0
 	virtual bool unk403() = 0;
 	// AMNOTE: The window the session is shown in
 	virtual QWidget *unk404() = 0;
