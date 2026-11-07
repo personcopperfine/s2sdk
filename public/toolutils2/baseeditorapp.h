@@ -67,8 +67,9 @@ public:
 	virtual void unk1723( CBaseEditorSession *pSession, const char *pszFileName ) = 0;
 	virtual void AppRestoreToolSettings( KeyValues3 *pSettings ) = 0;
 	virtual void AppSaveToolSettings( KeyValues3 *pSettings ) = 0;
+	// AMNOTE: False makes closing a session do nothing and report success
 	virtual bool unk271() = 0;
-	// AMNOTE: Returns the session after pSession
+	// AMNOTE: The session to make active when pSession closes, NULL for none
 	virtual CBaseEditorSession *unk272( CBaseEditorSession *pSession ) = 0;
 	virtual bool unk273() = 0;
 	// AMNOTE: Size of the recent files list
@@ -82,7 +83,7 @@ public:
 	CBaseEditorSession *m_pActiveSession;
 	CUtlVector< CBaseEditorSession * > m_Sessions;
 	uint8 m_unk101[307];
-	// AMNOTE: Set while OpenFile runs
+	// AMNOTE: Set while OpenFile runs; no session closes while it is set
 	bool m_bInOpenFile;
 	uint8 m_unk201[68];
 };
