@@ -12,7 +12,7 @@
 
 #include <functional>
 
-#include "tier0/platform.h"
+#include "appframework/iappsystem.h"
 #include "mathlib/mathlib.h"
 #include "resourcefile/resourcetype.h"
 #include "tier0/utlbuffer.h"
@@ -23,6 +23,7 @@ class CMesh;
 class CModel;
 class CRenderMesh;
 class IErrorListener;
+class IExportAnim;
 
 // AMNOTE: A model resource; the engine's error text names the type HModel
 typedef ResourceHandle_t HModel;
@@ -113,6 +114,29 @@ public:
 	virtual bool unk019( const char *pszName ) = 0;
 	// AMNOTE: Writes the scene as FBX
 	virtual bool unk0110( const char *pFileName, const char *pPathID, CUtlString *pError ) = 0;
+};
+
+//-----------------------------------------------------------------------------
+// The export system ("EXPORTSYSTEM_INTERFACE_VERSION_001")
+//-----------------------------------------------------------------------------
+abstract_class IExportSystem : public IAppSystem
+{
+public:
+	// Loads pSourceFile into a model export and writes it as FBX
+	virtual bool ConvertFileToFBX( const char *pSourceFile, const char *pSourcePathID, const char *pFileName, const char *pPathID, CUtlString *pError ) = 0;
+	// pBoneTransforms is optional and used only when it has one matrix per bone
+	virtual bool ExportModelToFBX( HModel hModel, const char *pFileName, const char *pPathID, const CUtlVector< matrix3x4_t > *pBoneTransforms, CUtlString *pError ) = 0;
+
+	virtual IExportModel *CreateExportModel( const char *pszName ) = 0;
+	// nFormat: 0 FBX, 1 DMX
+	virtual IExportAnim *CreateExportAnim( const char *pszName, int nFormat ) = 0;
+
+	// AMNOTE: Converts the texture pUnk names as unk102 does; an empty string when pUnk is NULL. The type of
+	// pUnk is not known: a pointer at its +8 leads to the texture's name.
+	virtual CUtlString unk101( const char *pszName, const char *pPathID, const void *pUnk, bool bUnk ) = 0;
+	// AMNOTE: Converts the texture file pFileName to PNG and returns a file name; an empty string when reading
+	// pFileName fails
+	virtual CUtlString unk102( const char *pszName, const char *pPathID, const char *pFileName, bool bUnk ) = 0;
 };
 
 #endif // IEXPORTSYSTEM_H
