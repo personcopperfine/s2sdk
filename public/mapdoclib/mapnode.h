@@ -41,11 +41,15 @@ struct MapNodeUnk4_t
 abstract_class IToolRenderCallbacks
 {
 public:
-	virtual void unk001( void *, void *, void * ) = 0;
-	virtual void unk002( void * ) = 0;
+	// AMNOTE: Fills pLayers, a CUtlVector of 160-byte layer entries, with the layers unk003 draws one by one; the int is 1 or 2
+	virtual void unk001( void *pLayers, void *, int ) = 0;
+	// AMNOTE: Called before unk003
+	virtual void unk002( CToolRenderContext *pContext ) = 0;
 	// AMNOTE: Draws the object into pContext
 	virtual void unk003( CToolRenderContext *pContext ) = 0;
-	virtual void unk004( void * ) = 0;
+	// AMNOTE: Called after unk003
+	virtual void unk004( CToolRenderContext *pContext ) = 0;
+	// AMNOTE: Called instead of the other callbacks when the object is not drawn
 	virtual void unk005( void * ) = 0;
 	virtual void unk006( float ) = 0;
 };
