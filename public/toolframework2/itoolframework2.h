@@ -22,8 +22,6 @@
 
 class IAsset;
 class IAssetType;
-class CEngineToolInfo;
-class CExternalToolInfo;
 class CQInputBindManager;
 class QWidget;
 class IToolFrameworkTabletInfo;
@@ -92,6 +90,68 @@ struct MultiAxisControllerInput_t
 	// AMNOTE: HID report 1 and report 2 of the device
 	Vector m_vecTranslation;
 	Vector m_vecRotation;
+};
+
+//-----------------------------------------------------------------------------
+// The tool list (bin/sdkenginetools.txt, bin/enginetools.txt), a KV3 file read by the member names
+//-----------------------------------------------------------------------------
+struct CBaseToolInfo
+{
+	CUtlString m_Name;
+	CUtlString m_OverrideToolShortcutName;
+	CUtlString m_FriendlyName;
+	CUtlString m_ToolIcon;
+};
+
+// A tool that lives in its own module and implements IToolSystem2
+struct CEngineToolInfo : public CBaseToolInfo
+{
+	CUtlString m_Library;
+	// Empty for "ToolSystem2_001"
+	CUtlString m_InterfaceName;
+	bool m_bShowInRevisionSubMenu;
+	// true unless the file says otherwise
+	bool m_bShowInToolsMenu;
+	bool m_bIsSecondaryTool;
+	bool m_bDoNotWarnAboutLargeAssetBatches;
+	bool m_bIsWorkshopManagerTool;
+	bool m_bIsWorkshopItemTool;
+	bool m_bCanHighlightSubassets;
+	CUtlVector< CUtlString > m_AssetTypes;
+	// The tool is offered only for these mods when the list is not empty, and never for the ones in m_ExcludeFromMods
+	CUtlVector< CUtlString > m_LimitToMods;
+	CUtlVector< CUtlString > m_ExcludeFromMods;
+
+	// AMNOTE: The tool's index, which IToolFramework2::FindTool returns; 0xFF until it is set
+	uint8 m_unk101;
+};
+
+// A program that opens files the tools list, like a code editor
+struct CExternalToolInfo : public CBaseToolInfo
+{
+	CUtlString m_Executable;
+	CUtlString m_Args;
+	CUtlString m_ArgsWithLineColumn;
+	CUtlString m_WorkingDir;
+	CUtlString m_MatchSystemExecutable;
+	CUtlVector< CUtlString > m_SupportedExts;
+	CUtlVector< CUtlString > m_PriorityExts;
+	bool m_bDebugCommandline;
+};
+
+struct CToolsConfig
+{
+	CUtlVector< CEngineToolInfo > m_EngineTools;
+	CUtlVector< CExternalToolInfo > m_ExternalTools;
+	CUtlVector< CUtlString > m_EngineModulesThatReferenceAssets;
+};
+
+// AMNOTE: The base class of the framework that "ToolServices_002" hands out: no virtual functions
+class IToolServices
+{
+public:
+	// The tool list the framework loaded
+	CToolsConfig *m_pToolsConfig;
 };
 
 abstract_class IToolFramework2 : public IAppSystem
