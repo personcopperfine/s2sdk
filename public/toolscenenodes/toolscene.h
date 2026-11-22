@@ -94,4 +94,18 @@ public:
 	virtual int TraceRay( const Vector &vecOrigin, const Vector &vecDirection, CUtlVector< ToolSceneTraceHitUnk_t > *pHits, int nMaxHits ) = 0;
 };
 
+// Scene objects that a tool object owns as a group
+abstract_class IToolSceneObjectContainer
+{
+public:
+	// AMNOTE: CVertexListSceneObject tests its primitives against pUnk; the others do nothing
+	virtual void unk001( void *pUnk, bool bUnk ) = 0;
+	// AMNOTE: Sets the transform of the scene objects (combined with their own, where a container keeps one)
+	virtual void unk002( const matrix3x4_t &transform ) = 0;
+	// Deletes the container
+	virtual void Release() = 0;
+	// AMNOTE: CModelInstanceSceneObjectContainer returns itself, the others NULL
+	virtual void *unk101() = 0;
+};
+
 #endif // TOOLSCENE_H
