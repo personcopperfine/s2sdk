@@ -43,7 +43,7 @@ enum PropEdModifyType_t
 struct PropEdAttrUnk_t
 {
 	// AMNOTE: The target
-	ToolAttrUnk_t m_unk001;
+	HToolAttrTableInstance m_unk001;
 	const IBaseToolAttr *m_unk002;
 };
 
@@ -105,12 +105,12 @@ public:
 	}
 
 	// AMNOTE: The text of the target's row; when this returns false the editor shows unk103's instead
-	virtual bool unk101( const ToolAttrUnk_t &target, CUtlString *pText ) = 0;
+	virtual bool unk101( const HToolAttrTableInstance &target, CUtlString *pText ) = 0;
 	// AMNOTE: True when the target is not valid
-	virtual bool unk102( const ToolAttrUnk_t &target ) = 0;
-	virtual CUtlString unk103( const ToolAttrUnk_t &target ) = 0;
+	virtual bool unk102( const HToolAttrTableInstance &target ) = 0;
+	virtual CUtlString unk103( const HToolAttrTableInstance &target ) = 0;
 	// AMNOTE: Replaces pAttrs' contents with the attributes of the target the editor shows rows for
-	virtual void unk104( const ToolAttrUnk_t &target, CUtlVector< PropEdAttrUnk_t > *pAttrs ) = 0;
+	virtual void unk104( const HToolAttrTableInstance &target, CUtlVector< PropEdAttrUnk_t > *pAttrs ) = 0;
 	// AMNOTE: The attribute's type, which picks its editor when nothing else does
 	virtual int unk105( const PropEdAttrUnk_t &attr ) = 0;
 	// AMNOTE: Fills the 184 bytes that follow the attribute in PropEdSpecificAttr_t: type, name, editor and commands
@@ -125,7 +125,7 @@ public:
 	// AMNOTE: The value as the editor shows it: the friendly name of a choice, else the text
 	virtual void unk201( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, CUtlString *pText ) = 0;
 	// AMNOTE: The target of the attribute's element
-	virtual void unk202( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, ToolAttrUnk_t *pTarget ) = 0;
+	virtual void unk202( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, HToolAttrTableInstance *pTarget ) = 0;
 	// AMNOTE: Replaces pChoices' contents with the choices of the attribute
 	virtual void unk203( const PropEdAttrUnk_t &attr, CUtlVector< ToolAttrGenericChoice_t > *pChoices ) = 0;
 	// AMNOTE: An array operation, nOperation 0 adds an item; nArg1 and nArg2 are the operation's
@@ -144,7 +144,7 @@ public:
 	virtual void ClearEditorRebuildNeeded() = 0;
 
 	// AMNOTE: The help text of the target
-	virtual bool unk301( const ToolAttrUnk_t &target, CUtlString *pUnk, CUtlString *pUnk2 ) = 0;
+	virtual bool unk301( const HToolAttrTableInstance &target, CUtlString *pUnk, CUtlString *pUnk2 ) = 0;
 	// AMNOTE: True when the attribute takes its value as KeyValues3 (SetAttributeValueFromKV3)
 	virtual bool unk302( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath ) = 0;
 
@@ -154,7 +154,7 @@ public:
 	// AMNOTE: The element of the map the attribute is under the key, made when it is missing
 	virtual bool unk401( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, const char *pszKey, PropEdAttrUnk_t *pElement ) = 0;
 	// AMNOTE: The attribute nPath leads to, and its target
-	virtual IBaseToolAttr *unk402( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, ToolAttrUnk_t *pTarget ) = 0;
+	virtual IBaseToolAttr *unk402( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, HToolAttrTableInstance *pTarget ) = 0;
 	// AMNOTE: CToolAttrPropertyDomain returns itself
 	virtual CToolAttrPropertyDomain *unk403() { return NULL; }
 
@@ -191,11 +191,11 @@ public:
 	virtual ~IPropertyEditor() {}
 
 	// SetTargets with this target only
-	virtual void SetTarget( const ToolAttrUnk_t &target ) = 0;
+	virtual void SetTarget( const HToolAttrTableInstance &target ) = 0;
 	// Rebuilds the rows
-	virtual void SetTargets( const CUtlVector< ToolAttrUnk_t > &targets ) = 0;
+	virtual void SetTargets( const CUtlVector< HToolAttrTableInstance > &targets ) = 0;
 	// Does nothing for NULL
-	virtual void GetTargets( CUtlVector< ToolAttrUnk_t > *pTargets ) = 0;
+	virtual void GetTargets( CUtlVector< HToolAttrTableInstance > *pTargets ) = 0;
 	// Deletes a domain set with SetDomainOwned and rebuilds the rows
 	virtual void SetDomain( IPropertyEditDomain *pDomain ) = 0;
 	// SetDomain, and the editor deletes the domain when it replaces it
