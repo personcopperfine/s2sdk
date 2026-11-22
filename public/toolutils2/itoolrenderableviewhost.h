@@ -51,8 +51,8 @@ public:
 	virtual bool unk108( void *, void * ) = 0;
 	// AMNOTE: nTag is an 8-character tag ("tagvis", "viewport")
 	virtual bool unk109( uint64 nTag, void *pOut ) = 0;
-	virtual int unk1010() = 0;
-	virtual void *unk1011() = 0;
+	virtual int unk1010() { return 0; }
+	virtual void *unk1011() { return NULL; }
 };
 
 #endif // ITOOLRENDERABLEVIEWHOST_H
