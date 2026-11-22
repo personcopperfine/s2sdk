@@ -14,10 +14,28 @@
 #include "appframework/iappsystem.h"
 #include "tier0/utlbuffer.h"
 #include "tier0/utlstring.h"
+#include "tier0/utlvector.h"
 
 class CModelDoc;
 class CModelDocNode;
 class IModelDocLoaderUtils;
+
+//-----------------------------------------------------------------------------
+// The sink the ModelDoc library reports the errors and warnings of a load,
+// a resolve or a compile to
+//-----------------------------------------------------------------------------
+abstract_class IModelDocErrorHandler
+{
+public:
+	virtual bool HasErrors() = 0;
+	virtual bool HasWarnings() = 0;
+	// pNode is the node the message is about, or NULL
+	virtual void ReportError( CModelDocNode *pNode, const char *pszMessage ) = 0;
+	virtual void ReportWarning( CModelDocNode *pNode, const char *pszMessage ) = 0;
+
+	// AMNOTE: A stack of nodes the library pushes and pops; a message reported without a node is reported for the last one
+	CUtlVector< CModelDocNode * > m_unk001;
+};
 
 //-----------------------------------------------------------------------------
 // The ModelDoc utilities ("ModelDocUtils001")
