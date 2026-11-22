@@ -119,15 +119,16 @@ public:
 	virtual void GetWorldTransform( matrix3x4_t &matrix ) = 0;
 	// AMNOTE: The inverse of GetWorldTransform
 	virtual void unk121( matrix3x4_t & ) = 0;
-	// AMNOTE: GetWorldTransform with the scales applied when unk127 is true
+	// AMNOTE: GetWorldTransform with the scales applied when unk222 is true
 	virtual void unk122( matrix3x4_t & ) = 0;
 	// AMNOTE: The inverse of unk122
 	virtual void unk123( matrix3x4_t & ) = 0;
 	virtual void unk124() = 0;
-	// AMNOTE: Transforms the origin by the matrix
-	virtual void unk125( const VMatrix &, bool ) = 0;
-	virtual void unk126( void * ) = 0;
-	virtual bool unk127() = 0;
+	// AMNOTE: Transforms the origin by the matrix. nFlags: 0x10 also applies the scale, 0x40 the rotation, 0x8 applies
+	// them in the node's own space, 0x100 leaves the attached nodes alone; the texture lock options add 1, 2 and 4
+	virtual void DoTransform( const VMatrix &matrix, int nFlags ) = 0;
+	virtual void unk221( void * ) = 0;
+	virtual bool unk222() = 0;
 
 public:
 	Vector m_Origin;
