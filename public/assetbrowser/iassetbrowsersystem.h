@@ -23,11 +23,24 @@ class CQAssetBrowserPage;
 class CQAssetComboBox;
 class CQSubassetComboBox;
 class IAsset;
-class IAssetMenuCustomCommandContext;
 class IAssetType;
 class ISubasset;
 class ISubassetType;
 class IWorkingSet;
+
+//-----------------------------------------------------------------------------
+// Adds a tool's own commands to the asset menu
+//-----------------------------------------------------------------------------
+abstract_class IAssetMenuCustomCommandContext
+{
+public:
+	// AMNOTE: Appends the tool's commands for assets to pCommands, a CUtlVector of menu command entries
+	virtual void unk001( const CUtlVector< IAsset * > &assets, void *pCommands ) = 0;
+	// AMNOTE: The second argument is not read by the only implementation, so its type is not known
+	virtual void unk002( void *pUnk, void *pUnk2, float flUnk, float flUnk2 ) = 0;
+	// AMNOTE: False leaves the tool's commands out of the menu
+	virtual bool unk003() = 0;
+};
 
 // The browser's options, saved in the "asset_browser" block of the tool settings under "options.<member>"
 struct AssetBrowserOptionsUnk_t
