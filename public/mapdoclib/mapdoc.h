@@ -25,22 +25,26 @@ class CSelection;
 abstract_class IMapFileReference
 {
 public:
-	virtual ~IMapFileReference() = 0;
-	virtual void unk101() = 0;
-	virtual void unk102( const char * ) = 0;
-	virtual bool unk103() = 0;
-	virtual bool unk104( void * ) = 0;
-	virtual bool unk105() = 0;
-	virtual void unk106( void *, void * ) = 0;
+	// AMNOTE: Called before the map file is written; CMapDoc stores the editor version and build in its root and prepares its nodes for the save
+	virtual void unk001( bool ) = 0;
+	// AMNOTE: Called after the map file is written; CMapDoc undoes what unk001 prepared
+	virtual void unk002() = 0;
+	virtual void unk003( const char * ) = 0;
+	virtual bool unk004() = 0;
+	virtual bool unk005( void * ) = 0;
+	virtual bool unk006() = 0;
+	virtual void unk007( void *, void * ) = 0;
 };
 
 abstract_class IUndoDoc
 {
 public:
-	virtual void unk001( int ) = 0;
-	virtual void unk002( int, void *, int ) = 0;
-	// AMNOTE: CMapDoc applies pUndoable to its selection
-	virtual void unk003( IUndoable *pUndoable ) = 0;
+	// AMNOTE: CMapDoc marks the node pUndoable as removed from the document
+	virtual void unk001( IUndoable *pUndoable ) = 0;
+	// AMNOTE: CMapDoc adds the node pUndoable back under pParent, or under none when it is NULL
+	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) = 0;
+	// AMNOTE: CMapDoc records its selection into pHistory
+	virtual void unk003( CUndoHistory *pHistory ) = 0;
 };
 
 // AMNOTE: Undo history of a map document
@@ -94,18 +98,19 @@ public:
 class CMapDoc : public IMapFileReference, public IUndoDoc, public IUndoListener
 {
 public:
-	virtual ~CMapDoc();
-	virtual void unk101() override;
-	virtual void unk102( const char * ) override;
-	virtual bool unk103() override;
-	virtual bool unk104( void * ) override;
-	virtual bool unk105() override;
-	virtual void unk106( void *, void * ) override;
+	virtual void unk001( bool ) override;
+	virtual void unk002() override;
+	virtual void unk003( const char * ) override;
+	virtual bool unk004() override;
+	virtual bool unk005( void * ) override;
+	virtual bool unk006() override;
+	virtual void unk007( void *, void * ) override;
 
-	// AMNOTE: The engine has separate overrides of IUndoDoc::unk001 and IUndoListener::unk001
+	virtual void unk001( IUndoable *pUndoable ) override;
+	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) override;
+	virtual void unk003( CUndoHistory *pHistory ) override;
+
 	virtual void unk001( int ) override;
-	virtual void unk002( int, void *, int ) override;
-	virtual void unk003( IUndoable *pUndoable ) override;
 
 public:
 	uint8 m_unk001[96];
