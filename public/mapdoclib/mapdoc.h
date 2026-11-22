@@ -19,6 +19,7 @@
 
 class CMapDoc;
 class CMapDocSession;
+class IMapEditScope;
 class CSelection;
 
 // AMNOTE: A map document or a map file it references (prefabs)
@@ -91,8 +92,8 @@ public:
 
 public:
 	CMapDoc *m_pDoc;
-	// AMNOTE: Element type unknown
-	CUtlVector< void * > m_Scopes;
+	// AMNOTE: The innermost scope is the last
+	CUtlVector< IMapEditScope * > m_Scopes;
 };
 
 class CMapDoc : public IMapFileReference, public IUndoDoc, public IUndoListener
