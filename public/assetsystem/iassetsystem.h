@@ -21,6 +21,7 @@ class IAsset;
 class IAssetType;
 class IBitmapAsset;
 class CBufferString;
+class CSimpleAssetTypeInfo;
 struct AssetEngineCommand_t;
 class KeyValues;
 class KeyValues3;
@@ -270,6 +271,65 @@ public:
 	// AMNOTE: Declared here as the last virtual of the asset class before its own; the binary does not show
 	// whether the interface declares it
 	virtual ~IAsset() {}
+};
+
+//-----------------------------------------------------------------------------
+// An asset type: one per entry of the asset types files, with the entry's settings (CSimpleAssetTypeInfo)
+//-----------------------------------------------------------------------------
+abstract_class IAssetType
+{
+public:
+	// IAssetSystem::FindAssetTypeByName compares it
+	virtual const char *GetFriendlyName() = 0;
+
+	// AMNOTE: Appends one 272-byte entry per extension to the CUtlVector pEntries: an AssetLocation_t (content, and
+	// game only for a type present in the game tree), the extension as char[260], then a pointer to the type info's
+	// m_SuppressSubstrings
+	virtual void unk101( void *pEntries ) = 0;
+
+	// 0 for a type that is not a compiled resource
+	virtual ResourceType_t GetResourceType() = 0;
+	virtual const char *GetIconLg() = 0;
+	virtual const char *GetIconSm() = 0;
+	virtual bool HideTypeByDefault() = 0;
+	virtual bool IgnoreCompiledState() = 0;
+	virtual bool ContentFileIsText() = 0;
+
+	// AMNOTE: Returns true; its arguments are not known
+	virtual bool unk201() = 0;
+
+	virtual bool PrefersLivePreview() = 0;
+
+	// AMNOTE: Returns false; its arguments are not known
+	virtual bool unk301() = 0;
+	virtual int unk302() = 0;
+
+	// The number of extensions GetExtensions writes into ppExtensions: m_Ext, for a resource or map type the
+	// compiled ones, then the additional extensions
+	virtual int GetExtensionCount() = 0;
+	virtual void GetExtensions( const char **ppExtensions ) = 0;
+
+	virtual bool IsNontrivialChildAssetType() = 0;
+	virtual const char *GetExt() = 0;
+
+	virtual bool unk401() = 0;
+	// AMNOTE: A string of the type info, IAssetSystem::unk1001 compares it
+	virtual const char *unk402() = 0;
+	virtual bool unk403() = 0;
+
+	virtual bool ShouldCompileErrorFallbackToDisk() = 0;
+	virtual bool ErrorOnUnrecognizedOutboundRefs() = 0;
+	virtual const CUtlVector< CUtlString > *GetUnrecognizedOutboundRefsErrorTypeExceptions() = 0;
+	virtual const char *GetPreviewThumbnailOverlayIcon() = 0;
+	virtual CSimpleAssetTypeInfo *GetAssetTypeInfo() = 0;
+
+	virtual int unk501() = 0;
+	// AMNOTE: Appends m_Ext and the additional extensions
+	virtual void unk502( CUtlVector< CUtlString > *pExtensions ) = 0;
+
+	// AMNOTE: Declared here as the last virtual of the asset type class before its own; the binary does not show
+	// whether the interface declares it
+	virtual ~IAssetType() {}
 };
 
 // AMNOTE: Incomplete struct, only the members InitializeAssetSystem reads are known
