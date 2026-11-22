@@ -82,7 +82,10 @@ public:
 	CUtlString m_unk002;
 	CBaseEditorSession *m_pActiveSession;
 	CUtlVector< CBaseEditorSession * > m_Sessions;
-	uint8 m_unk101[307];
+	uint8 m_unk101[40];
+	// AMNOTE: The file manager: the recent files with their closed-correctly and autosaved flags, the new files, autosave and recovery
+	uint8 m_unk102[80];
+	uint8 m_unk103[187];
 	// AMNOTE: Set while OpenFile runs; no session closes while it is set
 	bool m_bInOpenFile;
 	uint8 m_unk201[68];
