@@ -483,4 +483,9 @@ public:
 	virtual ~IServerToolsInfo() {}
 };
 
+// AMNOTE: Exactly IAppSystem, no destructor; its Init builds the client entity system a tool process reads the game's client entity classes from
+abstract_class IClientToolsInfo : public IAppSystem
+{
+};
+
 #endif // ISOURCE2SERVER_H
