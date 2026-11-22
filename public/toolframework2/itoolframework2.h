@@ -25,7 +25,6 @@ class IAsset;
 class IAssetType;
 class CQInputBindManager;
 class QWidget;
-class IToolFrameworkTabletInfo;
 class IToolFrameworkAudioSettingsListener;
 class IFGDFromAssetListener;
 class CKV3TransferLoadContext;
@@ -222,6 +221,32 @@ public:
 	int m_nAssetTypeVersion;
 	int m_nAssetThumbnailVersion;
 	CUtlString m_Test_InjectSearchable;
+};
+
+// AMNOTE: Placeholder for the two floats IToolFrameworkTabletInfo::unk102 returns by value; it must stay trivially copyable
+struct ToolFrameworkTabletUnk8_t
+{
+	float m_unk001;
+	float m_unk002;
+};
+
+//-----------------------------------------------------------------------------
+// The state of the pen tablet the tools' Qt application tracks, see IToolFramework2::GetTabletInfo
+//-----------------------------------------------------------------------------
+abstract_class IToolFrameworkTabletInfo
+{
+public:
+	// The pen pressure, 1.0 without an active tablet
+	virtual float GetPressure() = 0;
+
+	// AMNOTE: True from a tablet press until its release
+	virtual bool IsActive() = 0;
+
+	// AMNOTE: 1 while the eraser end of the pen is in use, 0 otherwise and without an active tablet
+	virtual int unk101() = 0;
+
+	// AMNOTE: The pen's tilt along the x and y axes, zeros without an active tablet
+	virtual ToolFrameworkTabletUnk8_t unk102() = 0;
 };
 
 abstract_class IToolFramework2 : public IAppSystem
