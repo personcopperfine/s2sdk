@@ -87,7 +87,8 @@ public:
 
 	CEntityClass *m_pClass;
 	CEntityClassInfo *m_pBaseClassInfo;
-	CSchemaClassInfo* m_pSchemaBinding;
+	// AMNOTE: Points at the class's binding, which holds its CSchemaClassInfo once the schema system registered the class
+	CSchemaClassInfo** m_pSchemaBinding;
 	datamap_t* m_pDataDescMap;
 };
 
@@ -119,7 +120,7 @@ class CEntityClass
 public:
 	inline CSchemaClassInfo *GetSchemaBinding() const
 	{
-		return m_pClassInfo->m_pSchemaBinding;
+		return *m_pClassInfo->m_pSchemaBinding;
 	}
 
 	inline datamap_t *GetDataDescMap() const
