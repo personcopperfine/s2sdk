@@ -57,7 +57,8 @@ public:
 	// AMNOTE: The window the session is shown in
 	virtual QWidget *unk404() = 0;
 	virtual void unk405() = 0;
-	// AMNOTE: Checks the file out of source control
+	// AMNOTE: Adds the session's file to version control and refreshes its file status; false when the add fails.
+	// Hammer also offers to add the referenced maps that are not under version control
 	virtual bool unk406() = 0;
 	virtual void unk407() = 0;
 
