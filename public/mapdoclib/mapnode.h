@@ -23,6 +23,7 @@
 #include "toolutils2/undohistory.h"
 
 class CMapNode;
+class CToolRenderContext;
 class ITransformationBaseline;
 
 // AMNOTE: Name and layout not known, 8 bytes
@@ -42,7 +43,8 @@ abstract_class IToolRenderCallbacks
 public:
 	virtual void unk001( void *, void *, void * ) = 0;
 	virtual void unk002( void * ) = 0;
-	virtual void unk003( void *, void *, void * ) = 0;
+	// AMNOTE: Draws the object into pContext
+	virtual void unk003( CToolRenderContext *pContext ) = 0;
 	virtual void unk004( void * ) = 0;
 	virtual void unk005( void * ) = 0;
 	virtual void unk006( float ) = 0;
