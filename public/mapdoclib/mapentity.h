@@ -17,21 +17,24 @@
 #include "tier0/utlvector.h"
 #include "tier0/platform.h"
 
-// AMNOTE: Name not known. An output connection of an entity, 80 bytes
+// AMNOTE: Name not known. An output connection of an entity, 80 bytes; the named members are saved under their names
+// in the map file's DmeConnectionData elements
 struct MapEntityConnection_t
 {
+	// AMNOTE: Not saved
 	CUtlString m_unk001;
-	CUtlString m_unk002;
-	CUtlString m_unk003;
-	CUtlString m_unk004;
-	CUtlString m_unk005;
-	int m_unk006;
-	KeyValues3 m_unk007;
-	uint32 m_unk008;
-	int m_unk009;
-	uint8 m_unk0010;
+	CUtlString m_outputName;
+	CUtlString m_targetName;
+	CUtlString m_inputName;
+	CUtlString m_overrideParam;
+	int m_targetType;
+	KeyValues3 m_paramMap;
+	float m_delay;
+	int m_timesToFire;
+	uint8 m_unk101;
+	uint8 m_unk102;
 	// AMNOTE: Taken from a global counter when the connection is created or copied
-	int m_unk0011;
+	int m_unk103;
 };
 
 // AMNOTE: Name not known. A class of an FGD file, 288 bytes
@@ -82,7 +85,8 @@ public:
 class CMapGameDataNode : public CMapEntityIONode, public IVDataLookupListener, public IToolsResourceListener
 {
 public:
-	virtual const char *unk051( const char *, void * ) = 0;
+	// AMNOTE: Called with the key and its new value when an entity key changes
+	virtual void unk051( const char *pszKey, const char *pszValue ) = 0;
 	// AMNOTE: Looks up the FGD class of the entity class name and stores it
 	virtual void unk052( void *, bool, bool ) = 0;
 	virtual void unk053() = 0;
