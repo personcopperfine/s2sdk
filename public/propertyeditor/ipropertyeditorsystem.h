@@ -19,12 +19,14 @@
 class QWidget;
 class CBasePropItem;
 class CQAttributeEditor_Base;
+class CToolAttrPropertyDomain;
 class CToolEditContextQuery_Base;
 class IPropertyAttributeEditorFactory;
 class IPropertyCustomCommandFactory;
 class IPropertyEditDomain;
 class IPropertyEditor;
 struct PropEdSpecificAttr_t;
+struct ToolAttrGenericChoice_t;
 
 // How an edit reaches the domain: once, or as a drag that begins, continues and ends
 // AMNOTE: The engine prints the values as "ONE_SHOT", "BEGIN_INCREMENTAL", "INCREMENTAL" and "END_INCREMENTAL"; the
@@ -35,6 +37,21 @@ enum PropEdModifyType_t
 	PROPEDMODIFY_BEGIN_INCREMENTAL,
 	PROPEDMODIFY_INCREMENTAL,
 	PROPEDMODIFY_END_INCREMENTAL,
+};
+
+// AMNOTE: An attribute of a target; the first member of PropEdSpecificAttr_t
+struct PropEdAttrUnk_t
+{
+	// AMNOTE: The target
+	ToolAttrUnk_t m_unk001;
+	const IBaseToolAttr *m_unk002;
+};
+
+// AMNOTE: An attribute and the array indices that lead to the element below it
+struct PropEdAttrPathUnk_t
+{
+	const PropEdAttrUnk_t *m_unk001;
+	const CUtlVector< int > *m_unk002;
 };
 
 //-----------------------------------------------------------------------------
@@ -72,6 +89,83 @@ public:
 
 	// AMNOTE: The implementation's last virtual is its destructor; whether the interface or only the implementing class declares it is not known
 	virtual ~IPropertyEditorSystem() {}
+};
+
+//-----------------------------------------------------------------------------
+// What a property editor edits, implemented by the host tool. A target is an object with an
+// attribute table; an attribute below an array is reached through the array indices in nPath.
+//-----------------------------------------------------------------------------
+abstract_class IPropertyEditDomain
+{
+public:
+	virtual ~IPropertyEditDomain()
+	{
+		if ( g_pPropertyEditorSystem )
+			g_pPropertyEditorSystem->ReleaseDomain( this );
+	}
+
+	// AMNOTE: The text of the target's row; when this returns false the editor shows unk103's instead
+	virtual bool unk101( const ToolAttrUnk_t &target, CUtlString *pText ) = 0;
+	// AMNOTE: True when the target is not valid
+	virtual bool unk102( const ToolAttrUnk_t &target ) = 0;
+	virtual CUtlString unk103( const ToolAttrUnk_t &target ) = 0;
+	// AMNOTE: Replaces pAttrs' contents with the attributes of the target the editor shows rows for
+	virtual void unk104( const ToolAttrUnk_t &target, CUtlVector< PropEdAttrUnk_t > *pAttrs ) = 0;
+	// AMNOTE: The attribute's type, which picks its editor when nothing else does
+	virtual int unk105( const PropEdAttrUnk_t &attr ) = 0;
+	// AMNOTE: Fills the 184 bytes that follow the attribute in PropEdSpecificAttr_t: type, name, editor and commands
+	virtual bool unk106( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, void *pInfo ) = 0;
+
+	// An edit of nAttrs attributes begins; the domain makes the undo label from pszDisplayName when bUndo is set
+	virtual void BeginModify( const PropEdAttrUnk_t *pAttrs, int nAttrs, const char *pszDisplayName, PropEdModifyType_t nType, bool bUndo ) = 0;
+	virtual void EndModify( PropEdModifyType_t nType ) = 0;
+	virtual void SetAttributeValueFromString( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, const CUtlString &value, PropEdModifyType_t nType ) = 0;
+	virtual void GetAttributeValueString( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, CUtlString *pValue ) = 0;
+
+	// AMNOTE: The value as the editor shows it: the friendly name of a choice, else the text
+	virtual void unk201( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, CUtlString *pText ) = 0;
+	// AMNOTE: The target of the attribute's element
+	virtual void unk202( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, ToolAttrUnk_t *pTarget ) = 0;
+	// AMNOTE: Replaces pChoices' contents with the choices of the attribute
+	virtual void unk203( const PropEdAttrUnk_t &attr, CUtlVector< ToolAttrGenericChoice_t > *pChoices ) = 0;
+	// AMNOTE: An array operation, nOperation 0 adds an item; nArg1 and nArg2 are the operation's
+	virtual bool unk204( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, int nOperation, int nArg1, int nArg2 ) = 0;
+	// AMNOTE: Element nIndex of the array the attribute is
+	virtual bool unk205( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, int nIndex, PropEdAttrUnk_t *pElement ) { return false; }
+	// AMNOTE: The element count of the array the attribute is
+	virtual void unk206( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, int *pCount ) = 0;
+
+	// Runs a row's command on each of the attributes
+	virtual void ExecuteAttributeCommand( const char *pszCommand, const CUtlVector< PropEdAttrPathUnk_t > &attrs ) = 0;
+
+	// Asked after each edit: true when the editor has to rebuild its rows
+	virtual bool IsEditorRebuildNeeded() = 0;
+	virtual void SetEditorRebuildNeeded() = 0;
+	virtual void ClearEditorRebuildNeeded() = 0;
+
+	// AMNOTE: The help text of the target
+	virtual bool unk301( const ToolAttrUnk_t &target, CUtlString *pUnk, CUtlString *pUnk2 ) = 0;
+	// AMNOTE: True when the attribute takes its value as KeyValues3 (SetAttributeValueFromKV3)
+	virtual bool unk302( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath ) = 0;
+
+	virtual void SetAttributeValueFromKV3( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, const KeyValues3 *pValue, PropEdModifyType_t nType ) = 0;
+	virtual void GetAttributeValueKV3( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, KeyValues3 *pValue ) = 0;
+
+	// AMNOTE: The element of the map the attribute is under the key, made when it is missing
+	virtual bool unk401( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, const char *pszKey, PropEdAttrUnk_t *pElement ) = 0;
+	// AMNOTE: The attribute nPath leads to, and its target
+	virtual IBaseToolAttr *unk402( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, ToolAttrUnk_t *pTarget ) = 0;
+	// AMNOTE: CToolAttrPropertyDomain returns itself
+	virtual CToolAttrPropertyDomain *unk403() { return NULL; }
+
+	// The context a picker of the attribute opens with
+	virtual void FillEditContextQuery( const PropEdAttrUnk_t &attr, const CUtlVector< int > &nPath, CToolEditContextQuery_Base *pQuery ) = 0;
+
+	// AMNOTE: Answers a query no attribute answered
+	virtual void unk501( CToolEditContextQuery_Base *pQuery ) = 0;
+
+	// The rows are marked read-only and pasting is refused
+	virtual bool IsReadOnly() = 0;
 };
 
 //-----------------------------------------------------------------------------
