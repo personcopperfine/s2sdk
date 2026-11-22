@@ -14,12 +14,13 @@
 #include "appframework/iappsystem.h"
 #include "color.h"
 #include "rendersystem/rendersystemtypes.h"
+#include "toolscenenodes/toolscene.h"
 
+class QObject;
 class QPixmap;
 class QWidget;
 class CQToolSceneWidget;
 class IAsset;
-class IToolSceneNodeControllerFactory;
 class KeyValues3;
 
 // AMNOTE: An asset and its thumbnail fingerprint
@@ -106,6 +107,17 @@ abstract_class IAssetPreviewSettingsChangedListener
 {
 public:
 	virtual void OnAssetPreviewSettingsChanged() = 0;
+};
+
+// Makes the controller widget that a preview pane shows for a tool scene node of one class
+// (IAssetPreviewSystem::RegisterControllerFactory)
+abstract_class IToolSceneNodeControllerFactory
+{
+public:
+	// AMNOTE: The model and material controllers keep pUnk, the others do not read it
+	virtual QWidget *CreateWidget( QWidget *pParent, QObject *pUnk ) = 0;
+	// Points a widget made by CreateWidget at pNode
+	virtual void SetNode( QWidget *pWidget, CToolSceneNode *pNode ) = 0;
 };
 
 //-----------------------------------------------------------------------------
