@@ -72,4 +72,26 @@ public:
 	void *m_unk507;
 };
 
+// AMNOTE: Placeholder name; a hit of IToolSceneCustomTrace::TraceRay
+struct ToolSceneTraceHitUnk_t
+{
+	// AMNOTE: The distance from the ray's origin
+	float m_unk001;
+	// AMNOTE: The position of the hit
+	Vector m_unk002;
+	Vector m_unk003;
+	// AMNOTE: The node that was hit
+	CToolSceneNode *m_unk004;
+	uint8 m_unk005[36];
+};
+
+// A node that adds its own hits when the tool scene traces a ray
+abstract_class IToolSceneCustomTrace
+{
+public:
+	// Traces the ray from vecOrigin along vecDirection (normalised here) and adds up to nMaxHits hits (all for a
+	// negative count) to pHits; returns how many were added
+	virtual int TraceRay( const Vector &vecOrigin, const Vector &vecDirection, CUtlVector< ToolSceneTraceHitUnk_t > *pHits, int nMaxHits ) = 0;
+};
+
 #endif // TOOLSCENE_H
