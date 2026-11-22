@@ -475,4 +475,11 @@ public:
 
 typedef ISource2GameClients IServerGameClients;
 
+// AMNOTE: Adds only a destructor to IAppSystem; its Init builds the entity system a tool process reads the game's entity classes from
+abstract_class IServerToolsInfo : public IAppSystem
+{
+public:
+	virtual ~IServerToolsInfo() {}
+};
+
 #endif // ISOURCE2SERVER_H
