@@ -187,7 +187,8 @@ public:
 
 	virtual bool			GetNavMeshData( CNavData *pNavMeshData ) = 0;
 	virtual void			SetNavMeshData( const CNavData *navMeshData ) = 0;
-	virtual void			RegisterNavListener( INavListener *pNavListener ) = 0;
+	// False when the listener is registered already or 16 listeners are held
+	virtual bool			RegisterNavListener( INavListener *pNavListener ) = 0;
 	virtual void			UnregisterNavListener( INavListener *pNavListener ) = 0;
 	virtual bool			GetBugReportAttachment( int nIndex, CUtlBuffer &buf, CUtlString &sName, CUtlString &sDescription ) = 0;
 
