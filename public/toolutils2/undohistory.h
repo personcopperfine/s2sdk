@@ -70,8 +70,9 @@ class CUndoHistory
 {
 public:
 	virtual ~CUndoHistory() = 0;
-	// AMNOTE: Records pUndoable as a new step
-	virtual void unk101( IUndoable *pUndoable ) = 0;
+	// AMNOTE: Records pUndoable as deleted in the last step, opening an unnamed step when there is none; undoing the step
+	// puts it back. Returns 0 when nothing is recorded, 1 when recorded, 2 when the step already records it as deleted
+	virtual int unk101( IUndoable *pUndoable ) = 0;
 	// AMNOTE: Undoes the last step and moves it to m_pPartner; on a redo history (the partner of an undo history) this redoes
 	virtual void Undo() = 0;
 	// AMNOTE: A step can be undone
