@@ -17,6 +17,7 @@
 #include "tier0/utlbuffer.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
+#include "schemasystem/minschema.h"
 #include "mathlib/vector.h"
 #include "color.h"
 
@@ -27,6 +28,12 @@ class QWidget;
 class IToolFrameworkTabletInfo;
 class IToolFrameworkAudioSettingsListener;
 class IFGDFromAssetListener;
+class CKV3TransferLoadContext;
+class CKV3TransferSaveContext;
+class CResourceAssetTypeInfo;
+class CBitmapAssetTypeInfo;
+class CMapAssetTypeInfo;
+class CVMMDAssetTypeInfo;
 
 //-----------------------------------------------------------------------------
 // What a tool is asked to open when it is activated
@@ -152,6 +159,69 @@ class IToolServices
 public:
 	// The tool list the framework loaded
 	CToolsConfig *m_pToolsConfig;
+};
+
+//-----------------------------------------------------------------------------
+// What the asset type registry knows about an asset type, read from the asset type files by the member names
+//-----------------------------------------------------------------------------
+// A command of the asset type's menu that runs an engine command
+struct AssetEngineCommand_t
+{
+	CBufferString m_Command;
+	CBufferString m_Icon;
+	CBufferString m_Description;
+	bool m_bBringEngineToFront;
+};
+
+class CSimpleAssetTypeInfo
+{
+public:
+	virtual SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() = 0;
+	virtual void KV3TransferSave( CKV3TransferSaveContext *pContext ) const = 0;
+	virtual void KV3TransferLoad( CKV3TransferLoadContext *pContext ) = 0;
+	virtual const char *GetClassname() = 0;
+	virtual ~CSimpleAssetTypeInfo() = 0;
+
+	// AMNOTE: unk101 to unk108 are four pairs, one for each class derived from this one (resource, bitmap, map and VMMD
+	// asset types): the first of a pair calls the second, which returns the object when it is of that class and NULL otherwise
+	virtual CResourceAssetTypeInfo *unk101() = 0;
+	virtual CResourceAssetTypeInfo *unk102() = 0;
+	virtual CBitmapAssetTypeInfo *unk103() = 0;
+	virtual CBitmapAssetTypeInfo *unk104() = 0;
+	virtual CMapAssetTypeInfo *unk105() = 0;
+	virtual CMapAssetTypeInfo *unk106() = 0;
+	virtual CVMMDAssetTypeInfo *unk107() = 0;
+	virtual CVMMDAssetTypeInfo *unk108() = 0;
+
+public:
+	uint64 m_unk001;
+
+	CUtlString m_FriendlyName;
+	CUtlString m_Ext;
+	// Both default to the generic asset type icons
+	CUtlString m_IconLg;
+	CUtlString m_IconSm;
+	CUtlVector< CUtlString > m_SuppressSubstrings;
+	CUtlVector< CUtlString > m_AdditionalExtensions;
+	CUtlVector< AssetEngineCommand_t > m_EngineCommands;
+	CUtlVector< CUtlString > m_LimitToMods;
+	CUtlVector< CUtlString > m_ExcludeFromMods;
+	CUtlVector< CUtlString > m_HideForRetailMods;
+	CUtlString m_PreviewThumbnailOverlayIcon;
+	bool m_bErrorOnUnrecognizedOutboundRefs;
+	CUtlVector< CUtlString > m_UnrecognizedOutboundRefsErrorTypeExceptions;
+	bool m_bHideTypeByDefault;
+	bool m_bCannotBeShown;
+	bool m_bIsNontrivialChildAssetType;
+	bool m_bSuppressFullFingerprintCalculation;
+	bool m_bIgnoreCompiledState;
+	bool m_bContentFileIsText;
+	bool m_bPrefersLivePreview;
+	bool m_bPresentInGameTree;
+	bool m_bShouldCompileErrorFallbackToDisk;
+	int m_nAssetTypeVersion;
+	int m_nAssetThumbnailVersion;
+	CUtlString m_Test_InjectSearchable;
 };
 
 abstract_class IToolFramework2 : public IAppSystem
