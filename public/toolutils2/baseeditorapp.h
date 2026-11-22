@@ -72,7 +72,7 @@ public:
 	// AMNOTE: The session to make active when pSession closes, NULL for none
 	virtual CBaseEditorSession *unk272( CBaseEditorSession *pSession ) = 0;
 	virtual bool unk273() = 0;
-	// AMNOTE: Size of the recent files list
+	// AMNOTE: Size of the recent files list; the base returns 100
 	virtual int unk274() = 0;
 	virtual void unk275() = 0;
 
