@@ -67,8 +67,9 @@ public:
 	// Asked before the engine quits
 	virtual int RequestQuit() = 0;
 
-	// AMNOTE: ( false, true ) when the game loop activates and ( false, false ) when it deactivates; the first value's meaning is not known
-	virtual void unk101( bool, bool bActive ) = 0;
+	// AMNOTE: Called when a game loop activates or deactivates, on the client and on the server; a map load and a disconnect
+	// each make four calls. The first value is true when the server calls
+	virtual void unk101( bool, bool bActivate ) = 0;
 
 	virtual void HandleToolRequest( KeyValues3 *pRequest ) = 0;
 };
@@ -127,7 +128,7 @@ public:
 	virtual uint8 *FindTool( uint8 *pResult, const char *pName ) = 0;
 	virtual const char *GetToolName( uint8 nToolIndex ) = 0;
 
-	// Loads the tool module and connects its "ToolSystem2_001" interface, once per tool
+	// Loads the tool module and connects its interface, once per tool: the tool's m_InterfaceName, "ToolSystem2_001" when that is empty
 	virtual IToolSystem2 *LoadTool( uint8 nToolIndex ) = 0;
 
 	virtual CEngineToolInfo *GetEngineToolInfo( uint8 nToolIndex ) = 0;
@@ -165,7 +166,7 @@ public:
 	virtual void ReloadTabbedStyle() = 0;
 
 	// AMNOTE: Forwards both values to IToolSystem2::unk101 of every loaded tool
-	virtual void unk101( bool, bool bActive ) = 0;
+	virtual void unk101( bool, bool bActivate ) = 0;
 
 	virtual void MarkSettingsDirty() = 0;
 
@@ -210,12 +211,12 @@ public:
 	// Activates and raises the remembered tool window, otherwise the asset browser
 	virtual void ReactivateToolWindow() = 0;
 
-	// <settings dir>/<pName>/settings.txt; bUnknown adds a prefix to the file name
-	virtual void LoadSettings( const char *pName, CUtlBuffer &buf, bool bUnknown ) = 0;
-	virtual void SaveSettings( const char *pName, CUtlBuffer &buf, bool bUnknown ) = 0;
-	virtual void GetSettingsPath( const char *pName, CBufferString *pPath, bool bUnknown ) = 0;
+	// <settings dir>/<pName>/settings.txt; bModPrefix puts the mod's game subdirectory name and "_" before settings.txt
+	virtual void LoadSettings( const char *pName, CUtlBuffer &buf, bool bModPrefix ) = 0;
+	virtual void SaveSettings( const char *pName, CUtlBuffer &buf, bool bModPrefix ) = 0;
+	virtual void GetSettingsPath( const char *pName, CBufferString *pPath, bool bModPrefix ) = 0;
 
-	// Copies the settings to the next free numbered backup
+	// Copies the settings to the next free numbered backup. Every later SaveSettings and SaveSettingsKV3 is refused
 	virtual void BackupSettings() = 0;
 
 	// Engine tool by asset type, external tool by file extension; 0xFF when there is none
@@ -255,8 +256,8 @@ public:
 	virtual void SetToolSettings( uint8 nToolIndex, KeyValues3 *pSettings ) = 0;
 
 	// Load and save the named settings file as KV3, see LoadSettings
-	virtual bool LoadSettingsKV3( const char *pName, KeyValues3 *pSettings, bool bUnknown ) = 0;
-	virtual void SaveSettingsKV3( const char *pName, KeyValues3 *pSettings, bool bUnknown ) = 0;
+	virtual bool LoadSettingsKV3( const char *pName, KeyValues3 *pSettings, bool bModPrefix ) = 0;
+	virtual void SaveSettingsKV3( const char *pName, KeyValues3 *pSettings, bool bModPrefix ) = 0;
 
 	// pFileList is a ';' separated list of the FBX files to import
 	virtual void ShowImportWizard( const char *pFileList ) = 0;
