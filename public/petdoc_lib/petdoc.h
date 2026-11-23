@@ -12,6 +12,7 @@
 
 #include "tier0/keyvalues3.h"
 #include "tier0/utlvector.h"
+#include "tier0/utlstring.h"
 #include "tier0/buffer_string.h"
 #include "toolutils2/toolattr.h"
 #include "toolutils2/undohistory.h"
@@ -110,22 +111,30 @@ struct PetDocSelection_t
 	int m_unk002;
 };
 
-// AMNOTE: Incomplete class, only the tree, selection and undo members are known
+// AMNOTE: Incomplete class, its event dispatcher and its set of changed nodes are not known
 class CPetDoc : public CBaseUndoable, public IUndoListener
 {
 public:
-	// AMNOTE: Records the document as an undo step
+	// AMNOTE: Records the document in the open step of m_pUndoHistory
 	virtual void unk021() = 0;
 
 public:
-	uint8 m_unk001[88];
+	// AMNOTE: The event target that receives the document's events after m_unk002 (the one the application holds and
+	// its sessions share), NULL for an undo snapshot
+	void *m_unk001;
+	// AMNOTE: The document's event dispatcher
+	uint8 m_unk002[72];
+	// AMNOTE: No event is posted while it is above 0
+	int m_unk003;
 	CUtlVector< PetDocSelection_t > m_Selection;
 	CPetRootNode *m_pRoot;
 	CUndoHistory *m_pUndoHistory;
 	// AMNOTE: m_pUndoHistory's partner
 	CUndoHistory *m_unk101;
-	// AMNOTE: Caches of the tree, refreshed on undo
-	uint8 m_unk102[56];
+	// AMNOTE: A string per renderer node ("Unused" for an empty one), rebuilt after a change and on undo
+	CUtlVector< CUtlString > m_unk102;
+	// AMNOTE: The nodes changed since m_unk102 was rebuilt, a 32-byte set
+	uint8 m_unk103[32];
 };
 
 #endif // PETDOC_H
