@@ -68,6 +68,15 @@ public:
 	virtual void *unk008() = 0;
 };
 
+// A helper the editor's manipulators act on
+abstract_class IManipulatorTarget
+{
+public:
+	// AMNOTE: The bind target name of the helper's manipulator ("BoxManipulator", "sphereManipulator", "gizmo"), NULL when it has
+	// none. No call site found, the arguments are not proven
+	virtual const char *unk001() = 0;
+};
+
 abstract_class ITransformable
 {
 public:
