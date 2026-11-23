@@ -36,7 +36,7 @@ public:
 	// AMNOTE: Detaches the tool from its session's render scene; the base ignores pSession
 	virtual void unk012( CHammerEditorSession *pSession );
 	// AMNOTE: Takes a map view's pick context; true skips the document's own hit test
-	virtual bool unk013( void *pContext ) { return false; }
+	virtual bool unk013( PickContextUnk_t *pContext ) { return false; }
 	// AMNOTE: False refuses a switch to this tool
 	virtual bool unk014() { return true; }
 	// AMNOTE: False refuses a switch away from this tool
