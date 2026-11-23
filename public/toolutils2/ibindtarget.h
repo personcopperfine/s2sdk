@@ -18,16 +18,16 @@ abstract_class IBindTarget
 {
 public:
 	virtual ~IBindTarget() = 0;
-	virtual void unk101() = 0;
-	virtual void unk102() = 0;
-	virtual void unk103() = 0;
-	virtual int unk104() = 0;
+	virtual void unk101() {}
+	virtual void unk102() {}
+	virtual void unk103() {}
+	virtual int unk104() { return 0; }
 	// AMNOTE: Returns the class's static descriptor of its bindable commands
 	virtual CBaseBindTargetDescriptor *unk105() = 0;
-	virtual IBindTarget *unk106() = 0;
-	virtual IBindTarget *unk107() = 0;
+	virtual IBindTarget *unk106() { return this; }
+	virtual IBindTarget *unk107() { return this; }
 	// AMNOTE: Returns m_unk001, computed on the first call
-	virtual int unk108() = 0;
+	virtual int unk108();
 
 public:
 	// AMNOTE: -1 until unk108 computes it
