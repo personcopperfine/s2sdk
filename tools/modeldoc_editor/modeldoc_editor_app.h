@@ -10,15 +10,24 @@
 #pragma once
 #endif
 
+#include "resourcesystem/resourcehandle.h"
 #include "toolutils2/baseeditorapp.h"
 #include "toolutils2/baseeditorsession.h"
 #include "toolutils2/ibindtarget.h"
 #include "toolutils2/itoolsresourcelistener.h"
+#include "toolutils2/toolnodetypename.h"
 #include "tier0/errorlistener.h"
+#include "tier0/utlstring.h"
+#include "tier0/utlvector.h"
 
+class CBaseModelDocEditorTool;
 class CModelDoc;
+class CModelDocEditorSession;
+class CModelPreviewRoot;
 class CQModelDocEditorWnd;
 class IAsset;
+class IToolGameSimulationAPI;
+struct InfoForResourceTypeCModel;
 
 abstract_class IAssetFingerprintListener
 {
@@ -42,18 +51,125 @@ public:
 	uint8 m_unk001[144];
 };
 
-// AMNOTE: Incomplete class, only the window, document, asset and analysis members are known
+// AMNOTE: Placeholder name, the binary has none: the game preview state of a session, made when the gameinfo turns on
+// the ModelDoc feature "gamepreview"
+struct ModelDocGamePreviewUnk_t
+{
+	CModelDocEditorSession *m_unk001;
+	// AMNOTE: The game simulation interface IToolService hands out, fetched when the session is set up
+	IToolGameSimulationAPI *m_unk002;
+	// AMNOTE: 0 to 3, updated by the session's frame from the running game
+	int m_unk003;
+};
+
+// AMNOTE: Placeholder name, the binary has none. Incomplete struct, only these members are known: the session's display
+// and preview settings
+struct ModelDocDisplaySettingsUnk_t
+{
+	CModelDocEditorSession *m_unk001;
+	uint8 m_unk002[24];
+	// AMNOTE: The model rotation the RotateModel command changes
+	float m_unk003;
+	uint8 m_unk004[8];
+	int m_unk005;
+	uint8 m_unk006[440];
+	// AMNOTE: The preview outliner's category order and its expanded categories; clearing them marks the app's settings
+	// dirty
+	CUtlVector< CUtlString > m_unk007;
+	CUtlVector< CUtlString > m_unk008;
+	int m_unk009;
+};
+
+// AMNOTE: Incomplete class, only these members are known
 class CModelDocEditorSession : public CSimpleBaseEditorSession, public IBindTarget, public IAssetFingerprintListener, public IToolsResourceListener
 {
 public:
-	uint8 m_unk021[136];
+	// AMNOTE: CToolEventMapRegistrationHelper< CModelDocEditorSession >, the session's event bindings
+	uint64 m_unk021[6];
+	// AMNOTE: The event target that receives the session's events after m_unk023
+	void *m_unk022;
+	uint8 m_unk023[72];
+	// AMNOTE: No event is posted while it is above 0
+	int m_unk024;
 	CQModelDocEditorWnd *m_pMainWnd;
 	// AMNOTE: Replaced on every load and reload
 	CModelDoc *m_pDoc;
-	uint8 m_unk121[2776];
+	// AMNOTE: The Compile Debugger's step document, shown instead of m_pDoc while it is set
+	CModelDoc *m_unk121;
+	uint8 m_unk122[80];
+	int m_unk123;
+	// AMNOTE: The document the listener list in m_unk122 is registered with
+	CModelDoc *m_unk124;
+	// AMNOTE: The changed files the session's frame hands to its file changed dialog, emptied each frame
+	CUtlVector< CUtlString > m_unk125;
+	// AMNOTE: Assets of files the model references, collected by the check-out step before a save; their auto recompile
+	// is suppressed until the document is replaced
+	CUtlVector< IAsset * > m_unk126;
+	// AMNOTE: Set by the fingerprint listener; the session's frame posts an event and clears it
+	bool m_unk127;
+	// AMNOTE: Two objects that each hold the session and a CModelDoc, the second a CModelDocEditorInputSkeleton, and
+	// the CModelDocHelperManager
+	uint64 m_unk128[316];
+	uint8 m_unk129[4];
+	int m_unk1210;
+	// AMNOTE: The mode the SetManipulationMode_* commands set: 0 Selection, 1 Translate, 2 Rotate, 3 Scale; SetManipulationMode
+	// also takes 4
+	int m_unk1211;
+	// AMNOTE: The space the SetManipulationSpace_* commands set: 0 World, 1 Local
+	int m_unk1212;
+	int m_unk1213;
+	uint8 m_unk1214[36];
+	CModelPreviewRoot *m_unk1215;
+	// AMNOTE: The compiled model of the session's .vmdl; a change of its resource state rebuilds the preview
+	CStrongHandle< InfoForResourceTypeCModel > m_unk1216;
+	bool m_unk1217;
+	// AMNOTE: The resource state of m_unk1216 the preview was last built for
+	int m_unk1218;
+	bool m_unk1219;
 	// AMNOTE: Asset system object of the session's file, NULL when the file has none
-	void *m_pAsset;
-	uint8 m_unk221[920];
+	IAsset *m_pAsset;
+	// AMNOTE: NULL unless the gameinfo turns on the ModelDoc feature "gamepreview"
+	ModelDocGamePreviewUnk_t *m_unk221;
+	// AMNOTE: Rebuilds the preview on the next frame
+	bool m_unk222;
+	uint32 m_unk223;
+	int m_unk224;
+	// AMNOTE: Node types; a node's type is compared with each
+	CUtlVector< CToolNodeTypeName > m_unk225;
+	// AMNOTE: A CModelDocNodeSet
+	uint8 m_unk226[72];
+	void *m_unk227;
+	void *m_unk228;
+	// AMNOTE: Owned, destroyed with the session
+	CUtlVector< void * > m_unk229;
+	void *m_unk2210;
+	void *m_unk2211;
+	// AMNOTE: The physics simulation mode; SetManipulationMode sets it to 0 for every mode but 4
+	int m_unk2212;
+	bool m_unk2213;
+	int m_unk2214;
+	bool m_unk2215;
+	uint64 m_unk2216;
+	// AMNOTE: Plat_FloatTime of the session's last frame
+	double m_unk2217;
+	uint64 m_unk2218;
+	// AMNOTE: The active tool set, 0 or 1, and each set's index into m_unk2222
+	int m_unk2219;
+	int m_unk2220[2];
+	uint64 m_unk2221[2];
+	// AMNOTE: Owned, the viewport tools; SetActiveTool deactivates one and activates another
+	CBaseModelDocEditorTool *m_unk2222[6];
+	uint64 m_unk2223;
+	// AMNOTE: CBindTargetProxy, made to point at the active viewport tool
+	uint64 m_unk2224[3];
+	CUtlString m_unk2225;
+	bool m_unk2226;
+	// AMNOTE: Cleared by a compile that succeeds
+	bool m_unk2227;
+	// AMNOTE: Passed to the compile as the compiler hint _ModelDocCompileProgressListener
+	void *m_unk2228;
+	ModelDocDisplaySettingsUnk_t m_unk2229;
+	uint8 m_unk2230[24];
 	// AMNOTE: The error listener the session's compile reports to
 	CModelDocAnalysis m_Analysis;
 	uint8 m_unk321[88];
