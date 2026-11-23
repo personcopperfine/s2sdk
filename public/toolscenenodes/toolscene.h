@@ -125,4 +125,14 @@ public:
 	virtual void unk014( IHitTestable *pHitTestable, int64 nUnk, void *pUnk ) = 0;
 };
 
+// The 2D / 3D text of a tool
+abstract_class ITextSceneObject : public IToolSceneObjectContainer
+{
+public:
+	// AMNOTE: Clears (true) or sets (false) flag bit 60 of the scene object when unk012 returns the other value
+	virtual void unk011( bool bUnk ) = 0;
+	// AMNOTE: True while flag bit 60 of the scene object is clear
+	virtual bool unk012() = 0;
+};
+
 #endif // TOOLSCENE_H
