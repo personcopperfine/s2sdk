@@ -18,6 +18,7 @@
 class CSceneObject;
 class CToolScene;
 class CToolSceneTraceEnvironment;
+class IHitTestable;
 
 // AMNOTE: Incomplete class, only the scene, the parent and the children are known
 class CToolSceneNode
@@ -106,6 +107,22 @@ public:
 	virtual void Release() = 0;
 	// AMNOTE: CModelInstanceSceneObjectContainer returns itself, the others NULL
 	virtual void *unk101() = 0;
+};
+
+// The debug-draw geometry of a tool: lines, triangles or points with per-vertex colour
+abstract_class IVertexListObject : public IToolSceneObjectContainer
+{
+public:
+	// AMNOTE: Appends nVertexCount vertices of the object's vertex size, copied from pVertices; NULL only reserves
+	// the space
+	virtual void unk011( const void *pVertices, int nVertexCount ) = 0;
+	// AMNOTE: Appends room for nVertexCount vertices and returns it for the caller to fill
+	virtual void *unk012( int nVertexCount ) = 0;
+	// AMNOTE: Transforms the positions and normals of the vertices appended since the last call by transform
+	virtual void unk013( const matrix3x4_t &transform ) = 0;
+	// AMNOTE: The primitives appended from now on belong to pHitTestable: picking against them gives hits on it,
+	// which keep nUnk and pUnk. pUnk is a pointer-sized value nothing here reads, its type is not known
+	virtual void unk014( IHitTestable *pHitTestable, int64 nUnk, void *pUnk ) = 0;
 };
 
 #endif // TOOLSCENE_H
