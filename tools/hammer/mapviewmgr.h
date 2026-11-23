@@ -12,6 +12,7 @@
 
 #include "hammer/mapview.h"
 #include "hammer/hammereditorsession.h"
+#include "materialsystem2/imaterialsystem2.h"
 #include "tier0/utlvector.h"
 #include "tier0/platform.h"
 
@@ -22,14 +23,6 @@ abstract_class ITagVisualizationListener
 public:
 	// AMNOTE: The tag visualisation changed. No caller is known, so its arguments are not known
 	virtual void unk001() = 0;
-};
-
-abstract_class IShaderReloadListener
-{
-public:
-	// AMNOTE: Both are called for a shader reload. No caller is known, so their arguments are not known
-	virtual void unk001() = 0;
-	virtual void unk002() = 0;
 };
 
 abstract_class IBoundingBoxChangeListener
