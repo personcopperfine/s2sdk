@@ -29,6 +29,21 @@ class IAsset;
 class IToolGameSimulationAPI;
 struct InfoForResourceTypeCModel;
 
+// How the session's preview views the model
+enum class ModelDocViewMode_t
+{
+	INVALID = 0,
+	PERSPECTIVE,
+	ORTHO_TOP,
+	ORTHO_BOTTOM,
+	ORTHO_FRONT,
+	ORTHO_BACK,
+	ORTHO_RIGHT,
+	ORTHO_LEFT,
+	ATTACHMENT,
+	UV_MAP,
+};
+
 abstract_class IAssetFingerprintListener
 {
 public:
@@ -99,7 +114,8 @@ struct ModelDocDisplaySettingsUnk_t
 	// AMNOTE: The model rotation the RotateModel command changes
 	float m_unk003;
 	uint8 m_unk004[8];
-	int m_unk005;
+	// AMNOTE: The preview's view mode, PERSPECTIVE by default
+	ModelDocViewMode_t m_unk005;
 	uint8 m_unk006[440];
 	// AMNOTE: The preview outliner's category order and its expanded categories; clearing them marks the app's settings
 	// dirty
@@ -161,7 +177,8 @@ public:
 	// AMNOTE: Rebuilds the preview on the next frame
 	bool m_unk222;
 	uint32 m_unk223;
-	int m_unk224;
+	// AMNOTE: The view mode the UV map view returns to
+	ModelDocViewMode_t m_unk224;
 	// AMNOTE: Node types; a node's type is compared with each
 	CUtlVector< CToolNodeTypeName > m_unk225;
 	// AMNOTE: A CModelDocNodeSet
