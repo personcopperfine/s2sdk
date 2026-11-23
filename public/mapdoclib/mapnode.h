@@ -96,7 +96,8 @@ public:
 	virtual bool unk004() = 0;
 	virtual void *unk005() = 0;
 	virtual void unk006() = 0;
-	virtual bool unk007() = 0;
+	// AMNOTE: True when it wrote its value to pUnk
+	virtual bool unk007( int *pUnk ) = 0;
 	virtual void *unk008() = 0;
 };
 
