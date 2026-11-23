@@ -14,6 +14,8 @@
 
 #include "appframework/iappsystem.h"
 #include "tier0/buffer_string.h"
+#include "tier0/random.h"
+#include "tier0/utlhashtable.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
 #include "mathlib/mathlib.h"
@@ -159,6 +161,43 @@ public:
 	virtual float EvaluateFloatExpression( const char *pszExpression ) = 0;
 	// EvaluateFloatExpression, true when the absolute value is above 0.0001
 	virtual bool EvaluateBoolExpression( const char *pszExpression ) = 0;
+};
+
+// AMNOTE: Placeholder name. A shape an evaluation places on, found by its name
+struct SmartPropShapeUnk_t
+{
+	// AMNOTE: Matched case-insensitively against the shape name of a path or mesh placement
+	CUtlString m_Name;
+	// AMNOTE: The shape's transform the placement works in
+	CTransform m_Transform;
+	ISmartPropShape *m_pShape;
+};
+
+// AMNOTE: Incomplete class, only the environment, the transforms, the colour, the random stream, the variable index and
+// the shapes are known. One evaluation of a smart prop, built by ISmartPropSystem::EvaluateSmartProp on its stack
+class CSmartPropEvaluationContext : public IAttributeEvaluationContext
+{
+public:
+	ISmartPropEvaluationEnvironment *m_pEnvironment;
+	uint8 m_unk101[240];
+	// AMNOTE: The current transform, set to the object transform when the evaluation starts
+	CTransform m_unk102;
+	uint8 m_unk103[80];
+	// AMNOTE: The object transform, m_vPosition.w the uniform scale
+	CTransform m_unk104;
+	// AMNOTE: The tint colour the evaluation starts with
+	Color m_unk105;
+	// AMNOTE: Draws the random seed of an element that has no stored one
+	CUniformRandomStreamImpl< CThreadNullMutex > m_unk106;
+	uint8 m_unk107[152];
+	// AMNOTE: The variables' index in the variable values by variable name
+	CUtlHashtable< const char *, int, CaselessStringHashFunctor, CaselessStringEqualFunctor > m_unk108;
+	uint8 m_unk109[104];
+	// The shapes passed to the evaluation
+	CUtlVector< SmartPropShapeUnk_t > m_Shapes;
+	// Each shape's index in m_Shapes by its name
+	CUtlHashtable< CUtlString, int, CaselessStringHashFunctor, CaselessStringEqualFunctor > m_ShapeIndexByName;
+	uint8 m_unk201[80];
 };
 
 //-----------------------------------------------------------------------------
