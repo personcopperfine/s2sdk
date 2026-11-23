@@ -11,6 +11,7 @@
 #endif
 
 #include "toolutils2/ibindtarget.h"
+#include "toolutils2/undohistory.h"
 #include "mapdoclib/mapnode.h"
 #include "mathlib/vector.h"
 #include "mathlib/vector2d.h"
@@ -18,6 +19,7 @@
 #include "tier0/utlstring.h"
 #include "tier0/platform.h"
 
+class CBaseToolPlane;
 class CHammerEditorSession;
 class CMapView;
 class QCursor;
@@ -193,6 +195,60 @@ public:
 	// AMNOTE: The lasso is being moved, from the cursor position m_unk027
 	bool m_unk026;
 	Vector2D m_unk027;
+};
+
+// AMNOTE: The undoable state of a CBaseToolPlane: the plane's three points
+class CToolPlaneState : public CBaseUndoable
+{
+public:
+	// AMNOTE: unk001, unk002 and the destructor are the class's own; the others keep CBaseUndoable's default bodies
+	virtual IUndoable *unk001() override;
+	virtual void unk002( IUndoable *pSource ) override;
+	virtual void unk003() override;
+	virtual void unk004() override;
+	virtual void unk005() override;
+	virtual void unk006( bool bUnk ) override;
+	virtual void unk007() override;
+	virtual bool unk008() override;
+	virtual void *unk009() override;
+	virtual void unk0010( void *pUnk ) override;
+	virtual int unk0011() override;
+	virtual void unk0012() override;
+	virtual ~CToolPlaneState();
+
+public:
+	// AMNOTE: The tool the state belongs to, NULL in a snapshot; restoring a snapshot into it calls the tool's unk022
+	CBaseToolPlane *m_pTool;
+	// AMNOTE: The points are set
+	bool m_unk121;
+	// AMNOTE: The plane's rotation about its normal in degrees; a restore keeps it
+	float m_unk122;
+	Vector m_unk123;
+	// AMNOTE: m_unk124 and m_unk125 are the points CBaseToolPlane::m_unk023 0 and 1 select
+	Vector m_unk124;
+	Vector m_unk125;
+};
+
+// AMNOTE: Incomplete class, only the plane state and the drag state are known. A tool that places a plane by three
+// points dragged in a 2D view; its table has unk0146 pure, each plane tool has its own
+class CBaseToolPlane : public CBaseTool
+{
+public:
+	// AMNOTE: Records m_unk021 into the open undo operation
+	virtual void unk021();
+	// AMNOTE: The plane changed; called after an undo or a redo restored m_unk021
+	virtual void unk022() {}
+
+public:
+	CToolPlaneState m_unk021;
+	// AMNOTE: The pick distance of a point in pixels, 6
+	int m_unk022;
+	// AMNOTE: The dragged point: -1 none, 0 or 1 one point, 2 both
+	int m_unk023;
+	// AMNOTE: A drag is running; returned by unk018
+	bool m_unk024;
+	// AMNOTE: The last position of the drag
+	Vector m_unk025;
 };
 
 #endif // BASETOOL_H
