@@ -17,11 +17,13 @@
 #include "mathlib/vector.h"
 #include "mathlib/vmatrix.h"
 #include "toolutils2/undohistory.h"
+#include "tier0/smartptr.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
 #include "tier0/platform.h"
 
 class CSelection;
+class CSelectionHandle;
 
 // AMNOTE: Enumerator names follow the "SelectionMode*" bind commands; the prefix is in no binary
 enum SelectMode_t
@@ -192,8 +194,37 @@ public:
 	virtual void unk0184( CDmElement *pElement ) = 0;
 };
 
+// AMNOTE: Incomplete class, only the size is known. A vertex of a mesh node, the item of CPolyVertexSelectionSet
+class CMeshVertex
+{
+public:
+	uint8 m_unk001[24];
+};
+
+// AMNOTE: Incomplete class, only the size is known. An edge of a mesh node, the item of CPolyEdgeSelectionSet
+class CMeshEdge
+{
+public:
+	uint8 m_unk001[24];
+};
+
+// AMNOTE: Incomplete class, only the size is known. A face of a mesh node, the item of CPolyFaceSelectionSet
+class CMeshFace
+{
+public:
+	uint8 m_unk001[24];
+};
+
+// AMNOTE: Incomplete class, only the size is known. A tile of a tile grid node, the item of CDotaTileSelectionSet
+class CDotaTileSelectionItem
+{
+public:
+	uint8 m_unk001[16];
+};
+
 // AMNOTE: Incomplete class, only the items, the owner, the bounds and the pivot are known. The base of the sets; T is
-// the item, CMapNode * for the object sets
+// the item: CMapNode * for the object sets, CMeshVertex, CMeshEdge or CMeshFace for the mesh component sets,
+// CSmartPtr< CSelectionHandle > for CMixedSelectionSet and CDotaTileSelectionItem for CDotaTileSelectionSet
 template < class T >
 class CSelectionSet : public ISelectionSet
 {
@@ -239,6 +270,46 @@ public:
 	int m_unk013;
 	// AMNOTE: A flag, then a CUtlVector of unknown elements
 	uint8 m_unk014[28];
+};
+
+class CPolyVertexSelectionSet : public CSelectionSet< CMeshVertex >
+{
+public:
+	// AMNOTE: Cleared by the constructor
+	bool m_unk011;
+	// AMNOTE: A CUtlVector of unknown elements
+	uint64 m_unk012[3];
+};
+
+class CPolyEdgeSelectionSet : public CSelectionSet< CMeshEdge >
+{
+public:
+	// AMNOTE: Cleared by the constructor
+	bool m_unk011;
+	// AMNOTE: A CUtlVector of unknown elements
+	uint64 m_unk012[3];
+};
+
+class CPolyFaceSelectionSet : public CSelectionSet< CMeshFace >
+{
+public:
+	// AMNOTE: Cleared by the constructor
+	bool m_unk011;
+};
+
+// AMNOTE: The set of SELECT_MODE_NAV, items behind selection handles
+class CMixedSelectionSet : public CSelectionSet< CSmartPtr< CSelectionHandle > >
+{
+public:
+	// AMNOTE: Cleared by the constructor
+	bool m_unk011;
+	// AMNOTE: A CUtlVector of unknown elements
+	uint64 m_unk012[3];
+};
+
+// AMNOTE: The set of SELECT_MODE_UNK007; it adds no member, and its m_SelectMode is SELECT_MODE_INVALID
+class CDotaTileSelectionSet : public CSelectionSet< CDotaTileSelectionItem >
+{
 };
 
 #endif // SELECTIONSET_H
