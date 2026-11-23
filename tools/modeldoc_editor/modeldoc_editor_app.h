@@ -36,6 +36,22 @@ public:
 	virtual void unk001( IAsset *pAsset ) = 0;
 };
 
+// AMNOTE: Incomplete class, only these members are known. A file the session's model reads; a change of its asset's
+// fingerprint rebuilds the document of the session's CModelDocEditorInputSkeleton
+class CModelDocEditorInputAssetFile : public IAssetFingerprintListener
+{
+public:
+	virtual ~CModelDocEditorInputAssetFile();
+
+public:
+	// AMNOTE: The session's input object whose list owns it; that object's first member is the session
+	void *m_unk011;
+	uint8 m_unk012[16];
+	// AMNOTE: The asset the fingerprint listener is added for, NULL when there is none
+	IAsset *m_unk013;
+	uint8 m_unk014[80];
+};
+
 // AMNOTE: Incomplete class, its own members are not known. Collects the errors of a document's nodes
 class CModelDocAnalysis : public IErrorListener
 {
