@@ -40,17 +40,6 @@ public:
 	virtual void unk007( CMapRootElement *pRoot, int nUnk ) = 0;
 };
 
-abstract_class IUndoDoc
-{
-public:
-	// AMNOTE: CMapDoc marks the node pUndoable as removed from the document
-	virtual void unk001( IUndoable *pUndoable ) = 0;
-	// AMNOTE: CMapDoc adds the node pUndoable back under pParent, or under none when it is NULL
-	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) = 0;
-	// AMNOTE: CMapDoc records its selection into pHistory
-	virtual void unk003( CUndoHistory *pHistory ) = 0;
-};
-
 // AMNOTE: Undo history of a map document
 class CMapDocHistory : public CUndoHistory
 {
