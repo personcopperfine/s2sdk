@@ -10,6 +10,7 @@
 #pragma once
 #endif
 
+#include "modeldoc_lib/modeldoc.h"
 #include "resourcesystem/resourcehandle.h"
 #include "toolutils2/baseeditorapp.h"
 #include "toolutils2/baseeditorsession.h"
@@ -21,7 +22,6 @@
 #include "tier0/utlvector.h"
 
 class CBaseModelDocEditorTool;
-class CModelDoc;
 class CModelDocEditorSession;
 class CModelPreviewRoot;
 class CQModelDocEditorWnd;
@@ -50,6 +50,18 @@ public:
 	// AMNOTE: The asset the fingerprint listener is added for, NULL when there is none
 	IAsset *m_unk013;
 	uint8 m_unk014[80];
+};
+
+// AMNOTE: Incomplete class, only these members are known. A document of the session's own, rebuilt from the session's
+// input files when one of them changes
+class CModelDocEditorInputSkeleton
+{
+public:
+	// AMNOTE: CToolEventMapRegistrationHelper< CModelDocEditorInputSkeleton >, its event bindings
+	uint64 m_unk001[6];
+	CModelDocEditorSession *m_unk002;
+	CModelDoc m_unk003;
+	uint8 m_unk004[64];
 };
 
 // AMNOTE: Incomplete class, its own members are not known. Collects the errors of a document's nodes
