@@ -36,7 +36,6 @@ class CSamplerStateDesc;
 class CRenderPipelineFrameStats;
 class CPipelineFence;
 class CDeviceFence;
-class ITextureResidencyListener;
 class IMaxSwapChainDimensionsChangedListener;
 class IRaytraceShaderBindingTable;
 class IRenderShaderByteCode;
@@ -77,6 +76,14 @@ struct RenderDeviceUnkVector4_t
 	float m_unk002;
 	float m_unk003;
 	float m_unk004;
+};
+
+// AMNOTE: Registered with IRenderDevice::AddTextureResidencyListener; both are given the texture they are about
+abstract_class ITextureResidencyListener
+{
+public:
+	virtual void unk001( HRenderTexture hTexture ) = 0;
+	virtual void unk002( HRenderTexture hTexture ) = 0;
 };
 
 abstract_class IRenderDevice
