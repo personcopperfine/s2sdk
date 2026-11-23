@@ -23,6 +23,7 @@
 
 class CBaseModelDocEditorTool;
 class CModelDocEditorSession;
+class CModelDocEditorTool_Selection;
 class CModelPreviewRoot;
 class CQModelDocEditorWnd;
 class IAsset;
@@ -151,25 +152,28 @@ public:
 	CUtlVector< IAsset * > m_unk126;
 	// AMNOTE: Set by the fingerprint listener; the session's frame posts an event and clears it
 	bool m_unk127;
-	// AMNOTE: Two objects that each hold the session and a CModelDoc, the second a CModelDocEditorInputSkeleton, and
-	// the CModelDocHelperManager
-	uint64 m_unk128[316];
-	uint8 m_unk129[4];
-	int m_unk1210;
+	// AMNOTE: An object that holds the session, a CModelDoc and the session's CModelDocEditorInputAssetFile objects
+	uint64 m_unk128[155];
+	CModelDocEditorInputSkeleton m_unk129;
+	bool m_unk1210;
+	// AMNOTE: The CModelDocHelperManager
+	uint64 m_unk1211[9];
+	uint8 m_unk1212[4];
+	int m_unk1213;
 	// AMNOTE: The mode the SetManipulationMode_* commands set: 0 Selection, 1 Translate, 2 Rotate, 3 Scale; SetManipulationMode
 	// also takes 4
-	int m_unk1211;
+	int m_unk1214;
 	// AMNOTE: The space the SetManipulationSpace_* commands set: 0 World, 1 Local
-	int m_unk1212;
-	int m_unk1213;
-	uint8 m_unk1214[36];
-	CModelPreviewRoot *m_unk1215;
+	int m_unk1215;
+	int m_unk1216;
+	uint8 m_unk1217[36];
+	CModelPreviewRoot *m_unk1218;
 	// AMNOTE: The compiled model of the session's .vmdl; a change of its resource state rebuilds the preview
-	CStrongHandle< InfoForResourceTypeCModel > m_unk1216;
-	bool m_unk1217;
-	// AMNOTE: The resource state of m_unk1216 the preview was last built for
-	int m_unk1218;
-	bool m_unk1219;
+	CStrongHandle< InfoForResourceTypeCModel > m_unk1219;
+	bool m_unk1220;
+	// AMNOTE: The resource state of m_unk1219 the preview was last built for
+	int m_unk1221;
+	bool m_unk1222;
 	// AMNOTE: Asset system object of the session's file, NULL when the file has none
 	IAsset *m_pAsset;
 	// AMNOTE: NULL unless the gameinfo turns on the ModelDoc feature "gamepreview"
@@ -204,7 +208,8 @@ public:
 	uint64 m_unk2221[2];
 	// AMNOTE: Owned, the viewport tools; SetActiveTool deactivates one and activates another
 	CBaseModelDocEditorTool *m_unk2222[6];
-	uint64 m_unk2223;
+	// AMNOTE: The selection tool, the first of m_unk2222
+	CModelDocEditorTool_Selection *m_unk2223;
 	// AMNOTE: CBindTargetProxy, made to point at the active viewport tool
 	uint64 m_unk2224[3];
 	CUtlString m_unk2225;
