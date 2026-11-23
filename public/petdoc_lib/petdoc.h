@@ -82,6 +82,15 @@ class CPetChildNode : public CBasePetNode
 {
 };
 
+// AMNOTE: A function of the system (an operator, initializer, emitter, renderer, ...): its table is an instance of
+// the function's class
+class CPetFunctionNode : public CBasePetNode
+{
+public:
+	// AMNOTE: The root's node array it is in (0 to 6), unk021 returns it
+	int m_unk011;
+};
+
 struct PetDocSelection_t
 {
 	// AMNOTE: Kind of the selected node
