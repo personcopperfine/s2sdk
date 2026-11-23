@@ -23,6 +23,7 @@
 #include "toolutils2/toolattr.h"
 #include "toolutils2/undohistory.h"
 
+class CBaseHelper;
 class CMapNode;
 class CToolRenderContext;
 class ITransformationBaseline;
@@ -146,7 +147,7 @@ public:
 	Vector m_Scales;
 };
 
-// AMNOTE: Incomplete class, only the parent and the children are known
+// AMNOTE: Incomplete class, only the helpers, the parent and the children are known
 class CMapNode : public CMapPoint, public IUndoable, public IToolRenderCallbacks, public IHitTestable, public ITransformable, public IMapNodeToolAttrRoot, public IToolAttrNotifyRoot, public IRaytraceEnvironmentOwner
 {
 public:
@@ -385,7 +386,9 @@ public:
 	virtual void unk4377( void *, int, void * ) = 0;
 
 public:
-	uint8 m_unk031[152];
+	uint8 m_unk031[128];
+	// AMNOTE: The node's helpers; they are not children
+	CUtlVector< CBaseHelper * > m_unk032;
 	CMapNode *m_pParent;
 	uint8 m_unk131[88];
 	CUtlVector< DmElementHandle_t > m_Children;
