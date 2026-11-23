@@ -91,6 +91,18 @@ public:
 	int m_unk011;
 };
 
+// AMNOTE: Incomplete class, a variable of the root's m_NamedValueLocals: its table is a ParticleNamedValueSource_t.
+// Only where its two tool attributes are is known
+class CPetVariableNode : public CBasePetNode
+{
+public:
+	// AMNOTE: The attribute m_ValueType, a CPetEditableType (a CPulseEditableType)
+	uint8 m_unk011[112];
+	// AMNOTE: The attribute m_DefaultConfig, a CPetVariableConfiguration (m_ConfigName, m_iAttachType,
+	// m_strEntityScope, m_strAttachmentName, m_BoundValuePath)
+	uint8 m_unk012[88];
+};
+
 struct PetDocSelection_t
 {
 	// AMNOTE: Kind of the selected node
