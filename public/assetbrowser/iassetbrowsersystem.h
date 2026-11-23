@@ -12,6 +12,7 @@
 #endif
 
 #include "appframework/iappsystem.h"
+#include "qcontrols/toolcontextmenuitem.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
 
@@ -29,16 +30,17 @@ class ISubassetType;
 class IWorkingSet;
 
 //-----------------------------------------------------------------------------
-// Adds a tool's own commands to the asset menu
+// What a tool gives the asset menu to add its own commands to it
 //-----------------------------------------------------------------------------
 abstract_class IAssetMenuCustomCommandContext
 {
 public:
-	// AMNOTE: Appends the tool's commands for assets to pCommands, a CUtlVector of menu command entries
-	virtual void unk001( const CUtlVector< IAsset * > &assets, void *pCommands ) = 0;
-	// AMNOTE: The second argument is not read by the only implementation, so its type is not known
-	virtual void unk002( void *pUnk, void *pUnk2, float flUnk, float flUnk2 ) = 0;
-	// AMNOTE: False leaves the tool's commands out of the menu
+	// AMNOTE: Appends the tool's own entries for the selected assets to pItems
+	virtual void unk001( const CUtlVector< IAsset * > &assets, CUtlVector< ToolContextMenuItem_t > *pItems ) = 0;
+	// AMNOTE: Reports where the cursor is over an asset preview: the two floats are its position as fractions of the
+	// preview's width and height. The pointer is the preview's object; its type is not known
+	virtual void unk002( void *pUnk, float flX, float flY ) = 0;
+	// AMNOTE: Whether the menu offers "Push To Global Browser"
 	virtual bool unk003() = 0;
 };
 
