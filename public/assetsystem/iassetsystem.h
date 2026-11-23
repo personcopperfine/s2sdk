@@ -29,8 +29,6 @@ class IAssetDir;
 class ISubasset;
 class ISubassetType;
 class IWorkingSet;
-class IAssetCacheListener;
-class IAssetFileListener;
 class IAssetFingerprintListener;
 class IAssetTagListener;
 
@@ -345,6 +343,20 @@ struct AssetSystemInitSettings_t
 	bool m_unk005;
 	bool m_unk006;
 	bool m_unk007;
+};
+
+// AMNOTE: Called from RunFrame with the frame's asset cache changes: a list whose first int is its count
+abstract_class IAssetCacheListener
+{
+public:
+	virtual void unk001( void *pUnk ) = 0;
+};
+
+// AMNOTE: Called from RunFrame with the frame's file changes: a list whose first int is its count
+abstract_class IAssetFileListener
+{
+public:
+	virtual void unk001( void *pUnk ) = 0;
 };
 
 //-----------------------------------------------------------------------------

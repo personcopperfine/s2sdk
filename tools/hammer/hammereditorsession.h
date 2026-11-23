@@ -10,6 +10,7 @@
 #pragma once
 #endif
 
+#include "assetsystem/iassetsystem.h"
 #include "toolutils2/baseeditorsession.h"
 #include "toolutils2/ibindtarget.h"
 #include "toolutils2/itoolsresourcelistener.h"
@@ -36,12 +37,6 @@ abstract_class IBindableCommandListener
 {
 public:
 	virtual void unk001( int, void *, int ) = 0;
-};
-
-abstract_class IAssetFileListener
-{
-public:
-	virtual void unk001( int * ) = 0;
 };
 
 abstract_class IMapDocSession
