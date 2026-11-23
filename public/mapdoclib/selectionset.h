@@ -192,41 +192,41 @@ public:
 	virtual void unk0184( CDmElement *pElement ) = 0;
 };
 
+// AMNOTE: Incomplete class, only the items, the owner, the bounds and the pivot are known. The base of the sets; T is
+// the item, CMapNode * for the object sets
 template < class T >
-class CSelectionSet;
-
-// AMNOTE: Incomplete class, only the items, the owner, the bounds and the pivot are known
-template <>
-class CSelectionSet< CMapNode * > : public ISelectionSet
+class CSelectionSet : public ISelectionSet
 {
 public:
-	// AMNOTE: Whether pItem may stay in the set
-	virtual bool unk021( CMapNode *const &pItem ) = 0;
-	virtual bool unk022( CMapNode *const &pItem ) = 0;
-	// AMNOTE: Whether pItem belongs to pNode
-	virtual bool unk023( CMapNode *const &pItem, CMapNode *pNode ) = 0;
-	virtual bool unk024( CMapNode *pNode, CMapNode *const &pItem ) = 0;
+	// AMNOTE: Whether item may stay in the set
+	virtual bool unk021( const T &item ) { return true; }
+	virtual bool unk022( const T &item ) { return true; }
+	// AMNOTE: Whether item belongs to pNode
+	virtual bool unk023( const T &item, CMapNode *pNode ) { return false; }
+	virtual bool unk024( CMapNode *pNode, const T &item ) = 0;
 	// AMNOTE: Computes the bounds of the items
-	virtual void unk025( AABB_t *pBounds ) = 0;
+	virtual void unk025( AABB_t *pBounds ) { pBounds->MakeInvalid(); }
 	// AMNOTE: Called after the items changed
-	virtual void unk026( const CUtlVector< CMapNode * > &added, const CUtlVector< CMapNode * > &removed ) = 0;
-	virtual void unk027( CMapNode *pItem ) = 0;
-	virtual void unk028( CMapNode *pItem ) = 0;
+	virtual void unk026( const CUtlVector< T > &added, const CUtlVector< T > &removed ) {}
+	virtual void unk027( T item ) {}
+	virtual void unk028( T item ) {}
 
 public:
-	CUtlVector< CMapNode * > m_SelectedItems;
+	CUtlVector< T > m_SelectedItems;
 	// AMNOTE: The items again, for lookups
-	uint8 m_unk101[48];
-	int m_unk102;
+	uint8 m_unk101[40];
+	// AMNOTE: A default-constructed item
+	T m_unk102;
+	int m_unk103;
 	SelectMode_t m_SelectMode;
 	CSelection *m_pSelection;
 	AABB_t m_Bounds;
 	// AMNOTE: True when the set has an owner
-	bool m_unk103;
-	uint8 m_unk104[71];
+	bool m_unk201;
+	uint8 m_unk202[71];
 	Vector m_vecPivot;
 	// AMNOTE: unk0178 sets it
-	int m_unk105;
+	int m_unk301;
 };
 
 class CObjectSelectionSet : public CSelectionSet< CMapNode * >
