@@ -16,6 +16,7 @@
 #include "tier0/buffer_string.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
+#include "mathlib/mathlib.h"
 #include "mathlib/transform.h"
 #include "mathlib/vector.h"
 #include "mathlib/vector2d.h"
@@ -80,7 +81,7 @@ abstract_class ISmartPropShape
 public:
 	virtual ~ISmartPropShape() {}
 
-	// AMNOTE: 0 for an ISmartPropShapePath, 1 for a mesh shape (ISmartPropShapeMesh, not declared)
+	// AMNOTE: 0 for an ISmartPropShapePath, 1 for an ISmartPropShapeMesh
 	virtual int GetShapeType() = 0;
 };
 
@@ -89,6 +90,37 @@ abstract_class ISmartPropShapePath : public ISmartPropShape
 public:
 	// AMNOTE: The path the placement follows; its type is not declared
 	virtual const void *GetPath() = 0;
+};
+
+// AMNOTE: A mesh shape (Hammer's mesh objects); faces and edges are passed as indices
+abstract_class ISmartPropShapeMesh : public ISmartPropShape
+{
+public:
+	// AMNOTE: Fills faces with every face of the mesh; false when the list could not be grown
+	virtual bool unk001( CUtlVector< int > &faces ) = 0;
+	// AMNOTE: Whether the shape has a mesh
+	virtual bool unk002() = 0;
+	// AMNOTE: The number of vertices of the face nFace
+	virtual int unk003( int nFace ) = 0;
+	// AMNOTE: Counts the edges of the face nFace that are open (closed when bClosedEdges); with bSharedVert only those
+	// next to another such edge of the face, without it only those that are not
+	virtual int unk004( int nFace, bool bClosedEdges, bool bSharedVert ) = 0;
+	// AMNOTE: Appends to faces the faces whose material is pszMaterial, or the others when bInvert; false when the list
+	// could not be grown
+	virtual bool unk005( const char *pszMaterial, bool bInvert, CUtlVector< int > &faces ) = 0;
+	// AMNOTE: Writes a frame of the face nFace oriented by a texture coordinate channel (nUnk 5 the first channel,
+	// 6 the second) and the face's extent along the frame's two axes to the floats; returns true
+	virtual bool unk006( int nFace, int nUnk, matrix3x4_t *pFrame, float *pflUnk1, float *pflUnk2 ) = 0;
+	// AMNOTE: Writes a frame of the face nFace oriented by its first open edge (its first closed edge when bOpenEdge
+	// is false) and the face's extent along the frame's two axes to the floats
+	virtual bool unk007( int nFace, bool bOpenEdge, matrix3x4_t *pFrame, float *pflUnk1, float *pflUnk2 ) = 0;
+	// AMNOTE: Appends to edges the closed edges whose angle between their two faces is within flMinAngle and flMaxAngle
+	// (degrees), or outside them when bInvert
+	virtual void unk008( float flMinAngle, float flMaxAngle, bool bInvert, CUtlVector< int > &edges ) = 0;
+	// AMNOTE: Writes a frame on the edge nEdge, and the edge's length to both floats
+	virtual bool unk009( int nEdge, matrix3x4_t *pFrame, float *pflUnk1, float *pflUnk2 ) = 0;
+	// AMNOTE: Fills vertices with the positions of the face nFace's vertices in the space of frame
+	virtual void unk0010( int nFace, const matrix3x4_t &frame, CUtlVector< Vector > &vertices ) = 0;
 };
 
 //-----------------------------------------------------------------------------
