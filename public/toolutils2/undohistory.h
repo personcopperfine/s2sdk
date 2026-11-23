@@ -92,7 +92,9 @@ public:
 
 public:
 	CUtlVector< UndoGroup_t * > m_unk001;
-	uint8 m_unk002[96];
+	uint8 m_unk002[88];
+	// AMNOTE: The document whose IUndoDoc methods the history calls; NULL until the owner sets it
+	IUndoDoc *m_pDoc;
 	// AMNOTE: The history that receives the undone steps (the redo history of the undo history and back)
 	CUndoHistory *m_pPartner;
 	uint8 m_unk101[1064];
