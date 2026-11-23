@@ -23,15 +23,14 @@ class CMesh;
 class CModel;
 class CRenderMesh;
 class IErrorListener;
-class IExportAnim;
 
 // AMNOTE: A model resource; the engine's error text names the type HModel
 typedef ResourceHandle_t HModel;
 
 //-----------------------------------------------------------------------------
 // The options an export object holds. From unk101 to unk1024 each getter returns what the setter after it stored.
-// AMNOTE: Which of these virtuals IExportOpts declares and which IExportModel and IExportAnim declare is
-// not visible; both implementations have these 32 in this order. The animation export ignores the
+// AMNOTE: IExportModel and IExportAnim each derive from IExportOpts alone and both implementations have these 32
+// in this order; whether IExportOpts declares all of them itself is not visible. The animation export ignores the
 // options it has no use for: its setters do nothing and its getters return a constant.
 //-----------------------------------------------------------------------------
 abstract_class IExportOpts
@@ -114,6 +113,26 @@ public:
 	virtual bool unk019( const char *pszName ) = 0;
 	// AMNOTE: Writes the scene as FBX
 	virtual bool unk0110( const char *pFileName, const char *pPathID, CUtlString *pError ) = 0;
+};
+
+//-----------------------------------------------------------------------------
+// An animation export, made by IExportSystem::CreateExportAnim and freed with delete. Its format, FBX or DMX,
+// is the one it was created with.
+//-----------------------------------------------------------------------------
+abstract_class IExportAnim : public IExportOpts
+{
+public:
+	// AMNOTE: Loads the DMX file pFileName from pPathID and adds its root element to the scene; false when the
+	// export is not FBX or the file's extension is not dmx
+	virtual bool unk011( const char *pFileName, const char *pPathID, IErrorListener *pErrorListener ) = 0;
+	// AMNOTE: IExportModel::unk011 for an FBX export; false when the export is not FBX
+	virtual bool unk012( CUtlBuffer &buf, const char *pFileName, const char *pPathID, IErrorListener *pErrorListener ) = 0;
+	// AMNOTE: Converts the sequence nSequence of hModel; false for a NULL hModel or an invalid sequence. pUnk is
+	// optional, a CUtlVector of 4-byte values (one per value the sequence's animation takes) whose type is not
+	// known. A DMX export converts one sequence at most
+	virtual bool unk013( HModel hModel, int nSequence, const void *pUnk, bool bUnk, CUtlString *pError ) = 0;
+	// AMNOTE: Writes the export to pFileName in pPathID, as FBX or as DMX
+	virtual bool unk014( const char *pFileName, const char *pPathID, CUtlString *pError ) = 0;
 };
 
 //-----------------------------------------------------------------------------
