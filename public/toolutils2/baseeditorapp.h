@@ -10,6 +10,7 @@
 #pragma once
 #endif
 
+#include "assetsystem/iassetsystem.h"
 #include "tier3/tier3.h"
 #include "tier0/keyvalues3.h"
 #include "tier0/utlstring.h"
@@ -25,6 +26,24 @@ class CBaseToolSystem2 : public CTier3AppSystem< IToolSystem2 >
 public:
 	// AMNOTE: Index of the tool in the tool framework
 	uint8 m_nToolIndex;
+};
+
+// AMNOTE: Incomplete class, only the queue is known. Queues the asset system's file changes for the tool to act on
+class CContentChangeWatcher : public IAssetFileListener
+{
+public:
+	// AMNOTE: The only virtual
+	virtual void unk001( void *pUnk ) override;
+
+public:
+	// AMNOTE: A CUtlVector of unknown elements
+	uint64 m_unk011[3];
+	uint64 m_unk012[4];
+	uint64 m_unk013[4];
+	// AMNOTE: The queued file changes, a CUtlVector of 48-byte records
+	uint64 m_unk014[3];
+	bool m_unk015;
+	uint64 m_unk016[2];
 };
 
 // AMNOTE: Incomplete class
@@ -102,8 +121,7 @@ public:
 	uint8 m_unk304[80];
 	// AMNOTE: The options read from the tool settings ("Perforce Integration", the autosave options)
 	uint8 m_unk305[32];
-	// AMNOTE: A CContentChangeWatcher, the IAssetFileListener that queues the asset system's file changes
-	uint8 m_unk306[144];
+	CContentChangeWatcher m_unk306;
 	// AMNOTE: The settings changed; RunFrame saves them while this is set, half a second after the last save at the earliest
 	bool m_unk307;
 	// AMNOTE: The time of the last settings save
