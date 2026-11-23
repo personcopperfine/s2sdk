@@ -245,7 +245,7 @@ public:
 	virtual void unk2321( void * ) = 0;
 	virtual void unk2322( void *, int ) = 0;
 	virtual void unk2323() = 0;
-	virtual void unk2324( void * ) = 0;
+	virtual void unk2324( int ) = 0;
 	virtual void unk2325( void *, bool ) = 0;
 	virtual void unk2326( void * ) = 0;
 	virtual bool unk2327() = 0;
@@ -391,7 +391,7 @@ public:
 	virtual bool unk4350( void * ) = 0;
 	virtual void unk4351( void *, void *, void * ) = 0;
 	virtual float unk4352() = 0;
-	virtual void unk4353( void *, void *, void *, void *, void *, void *, void *, void * ) = 0;
+	virtual void unk4353( void *, int, void *, void *, void *, void *, void *, void * ) = 0;
 	virtual bool unk4354() = 0;
 	virtual void *unk4355() = 0;
 	virtual int unk4356() = 0;
