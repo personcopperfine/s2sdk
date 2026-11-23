@@ -100,7 +100,7 @@ public:
 	virtual void unk007( CMapRootElement *pRoot, int nUnk ) override;
 
 	virtual void unk001( IUndoable *pUndoable ) override;
-	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) override;
+	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent, int nIndex ) override;
 	virtual void unk003( CUndoHistory *pHistory ) override;
 
 	// AMNOTE: nPhase is 0 before an undo or redo and 1 after it

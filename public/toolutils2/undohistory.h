@@ -52,11 +52,12 @@ class CUndoHistory;
 abstract_class IUndoDoc
 {
 public:
-	// AMNOTE: CMapDoc marks the node pUndoable as removed from the document
+	// AMNOTE: Removes the node pUndoable from the document
 	virtual void unk001( IUndoable *pUndoable ) = 0;
-	// AMNOTE: CMapDoc adds the node pUndoable back under pParent, or under none when it is NULL
-	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) = 0;
-	// AMNOTE: CMapDoc records its selection into pHistory
+	// AMNOTE: Adds the node pUndoable back under pParent at nIndex among its children; CMapDoc puts it under no node when
+	// pParent is NULL, CModelDoc under its root node
+	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent, int nIndex ) = 0;
+	// AMNOTE: Called on an undo or redo with the history the step moves to; CMapDoc records its selection into it
 	virtual void unk003( CUndoHistory *pHistory ) = 0;
 };
 
