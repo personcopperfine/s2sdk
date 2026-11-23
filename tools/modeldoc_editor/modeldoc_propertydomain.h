@@ -11,6 +11,7 @@
 #endif
 
 #include "tier0/platform.h"
+#include "toolutils2/toolattr_propertydomain.h"
 
 // What a ModelDoc property domain asks the editor that shows it
 abstract_class IModelDocPropertyHost
@@ -21,6 +22,15 @@ public:
 	virtual bool unk001() = 0;
 	// AMNOTE: Opens an undo step with the text on the session's document
 	virtual void unk002( const char *pszText ) = 0;
+};
+
+// AMNOTE: Its overrides are not declared. The constructor makes the domain its own listener
+// (CToolAttrPropertyDomain::m_unk001): an edit that begins opens an undo step through the host
+class CBaseModelDocPropertyDomain : public CToolAttrPropertyDomain, public IToolAttrDomainListener
+{
+public:
+	// AMNOTE: NULL by default; the editor's domain points it at its own IModelDocPropertyHost
+	IModelDocPropertyHost *m_unk011;
 };
 
 #endif // MODELDOC_PROPERTYDOMAIN_H
