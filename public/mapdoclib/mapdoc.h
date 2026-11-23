@@ -12,6 +12,7 @@
 
 #include "datamodel/dmelement.h"
 #include "mapdoclib/mapnode.h"
+#include "mapdoclib/selection.h"
 #include "toolutils2/undohistory.h"
 #include "tier0/utlstring.h"
 #include "tier0/utlvector.h"
@@ -19,22 +20,24 @@
 
 class CMapDoc;
 class CMapDocSession;
+class CMapRootElement;
 class IMapEditScope;
-class CSelection;
 
 // AMNOTE: A map document or a map file it references (prefabs)
 abstract_class IMapFileReference
 {
 public:
 	// AMNOTE: Called before the map file is written; CMapDoc stores the editor version and build in its root and prepares its nodes for the save
-	virtual void unk001( bool ) = 0;
+	virtual void unk001( bool bUnk ) = 0;
 	// AMNOTE: Called after the map file is written; CMapDoc undoes what unk001 prepared
 	virtual void unk002() = 0;
-	virtual void unk003( const char * ) = 0;
+	// AMNOTE: CMapDoc sets its map path
+	virtual void unk003( const char *pszPath ) = 0;
 	virtual bool unk004() = 0;
-	virtual bool unk005( void * ) = 0;
+	virtual bool unk005( void *pUnk ) = 0;
 	virtual bool unk006() = 0;
-	virtual void unk007( void *, void * ) = 0;
+	// AMNOTE: CMapDoc takes pRoot as its root element
+	virtual void unk007( CMapRootElement *pRoot, int nUnk ) = 0;
 };
 
 abstract_class IUndoDoc
@@ -99,19 +102,20 @@ public:
 class CMapDoc : public IMapFileReference, public IUndoDoc, public IUndoListener
 {
 public:
-	virtual void unk001( bool ) override;
+	virtual void unk001( bool bUnk ) override;
 	virtual void unk002() override;
-	virtual void unk003( const char * ) override;
+	virtual void unk003( const char *pszPath ) override;
 	virtual bool unk004() override;
-	virtual bool unk005( void * ) override;
+	virtual bool unk005( void *pUnk ) override;
 	virtual bool unk006() override;
-	virtual void unk007( void *, void * ) override;
+	virtual void unk007( CMapRootElement *pRoot, int nUnk ) override;
 
 	virtual void unk001( IUndoable *pUndoable ) override;
 	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent ) override;
 	virtual void unk003( CUndoHistory *pHistory ) override;
 
-	virtual void unk001( int ) override;
+	// AMNOTE: nPhase is 0 before an undo or redo and 1 after it
+	virtual void unk001( int nPhase ) override;
 
 public:
 	uint8 m_unk001[96];
