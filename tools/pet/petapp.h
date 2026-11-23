@@ -12,6 +12,7 @@
 
 #include "assetsystem/iassetsystem.h"
 #include "tier0/utlstring.h"
+#include "tier0/utlvector.h"
 #include "toolutils2/baseeditorapp.h"
 #include "toolutils2/baseeditorsession.h"
 #include "toolutils2/ibindtarget.h"
@@ -47,11 +48,14 @@ public:
 	uint8 m_unk1312[136];
 };
 
-// AMNOTE: Incomplete class, its own members are not known
+// AMNOTE: Incomplete class, it adds no virtual of its own
 class CPetApp : public CSimpleEditorSharedWindowApp< CPetSession, CQPetMainWnd >, public IToolsResourceListener
 {
 public:
-	uint8 m_unk031[56];
+	// AMNOTE: The event target the sessions and their documents post their events to after their own
+	void *m_unk031;
+	CUtlVector< CUtlString > m_unk032;
+	uint8 m_unk033[24];
 };
 
 #endif // PETAPP_H
