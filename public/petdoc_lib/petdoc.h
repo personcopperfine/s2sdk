@@ -65,6 +65,18 @@ public:
 	KeyValues3 m_unk003;
 };
 
+// AMNOTE: The particle system the document edits: its table holds the system's own properties, its nodes and
+// control point configurations are kept apart and written back into it on save
+class CPetRootNode : public CBasePetNode
+{
+public:
+	// AMNOTE: The nodes by kind (CBasePetNode::unk021), the file's m_PreEmissionOperators, m_Emitters,
+	// m_Initializers, m_Operators, m_ForceGenerators, m_Constraints, m_Renderers, m_Children and m_NamedValueLocals
+	CUtlVector< CBasePetNode * > m_unk011[9];
+	// AMNOTE: Pointers to 144-byte records read from and written to the table's m_controlPointConfigurations
+	CUtlVector< void * > m_controlPointConfigurations;
+};
+
 struct PetDocSelection_t
 {
 	// AMNOTE: Kind of the selected node
