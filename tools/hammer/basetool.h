@@ -13,6 +13,7 @@
 #include "toolutils2/ibindtarget.h"
 #include "toolutils2/undohistory.h"
 #include "mapdoclib/mapnode.h"
+#include "mapdoclib/selectionset.h"
 #include "mathlib/vector.h"
 #include "mathlib/vector2d.h"
 #include "color.h"
@@ -78,7 +79,7 @@ public:
 	// AMNOTE: The tool manager's manipulation mode changed from nOldMode to nNewMode
 	virtual void unk0124( int nOldMode, int nNewMode ) {}
 	// AMNOTE: The document's select mode changed to nSelectMode
-	virtual void unk0125( int nSelectMode ) {}
+	virtual void unk0125( SelectMode_t nSelectMode ) {}
 	// AMNOTE: Commits the tool's pending work or leaves the tool (what Enter does)
 	virtual void unk0126() {}
 	// AMNOTE: The document's active map root element changed
