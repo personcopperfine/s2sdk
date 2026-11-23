@@ -225,11 +225,17 @@ public:
 	uint8 m_unk321[88];
 };
 
-// AMNOTE: Incomplete class, its own members are not known
 class CModelDocEditorApp : public CBaseEditorSeparateWindowApp
 {
 public:
-	uint8 m_unk021[560];
+	// AMNOTE: Owned, made by the tool init (unk176) and freed by the tool shutdown (unk179); handed to each new session's
+	// set-up, and the node editor's property editor registers its event handlers with the object 8 bytes into it
+	void *m_unk021;
+	// AMNOTE: Owned, the entity FGD the tool init (unk176) loads and hands to IHelpSystem::AddGameDataHelp
+	void *m_unk022;
+	// AMNOTE: The app's display settings, made with no session: the tool settings are read into and written from it, and
+	// each new session copies it into its own
+	ModelDocDisplaySettingsUnk_t m_unk023;
 };
 
 #endif // MODELDOC_EDITOR_APP_H
