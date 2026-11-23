@@ -77,6 +77,11 @@ public:
 	CUtlVector< void * > m_controlPointConfigurations;
 };
 
+// AMNOTE: A child system of the root's m_Children: its table is a ParticleChildrenInfo_t (m_ChildRef, m_flDelay, ...)
+class CPetChildNode : public CBasePetNode
+{
+};
+
 struct PetDocSelection_t
 {
 	// AMNOTE: Kind of the selected node
