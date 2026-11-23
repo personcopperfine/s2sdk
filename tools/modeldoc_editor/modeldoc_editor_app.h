@@ -18,11 +18,13 @@
 
 class CModelDoc;
 class CQModelDocEditorWnd;
+class IAsset;
 
 abstract_class IAssetFingerprintListener
 {
 public:
-	virtual void unk001() = 0;
+	// AMNOTE: Called from IAssetSystem::RunFrame with pAsset, the asset the listener was added for
+	virtual void unk001( IAsset *pAsset ) = 0;
 };
 
 // AMNOTE: Incomplete class, its own members are not known. Collects the errors of a document's nodes
