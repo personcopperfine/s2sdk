@@ -226,13 +226,13 @@ public:
 	virtual void LoadSmartPropWithCallback( const CBufferString &name, const KeyValues3 *pData, const std::function< void( ISmartProp * ) > &callback ) = 0;
 
 	// Evaluates the smart prop at transform (m_vPosition.w is the uniform scale), tinted with color.
+	// pShapes, when not NULL, is copied into the evaluation's shapes.
 	// AMNOTE: The opaque arguments are, in order: a table of variable values keyed by variable; a list copied into the
-	// evaluation when not NULL; the shapes, a list of 64-byte records that path and mesh placements look up by name
-	// (case-insensitive), each with a transform at +16 and an ISmartPropShape * at +48; the per-element state in; a
-	// pointer kept for the evaluation; the per-element state out, written when not NULL; two output lists; and the
-	// output container of the evaluation (at most 10000 entries). A NULL pSmartProp evaluates nothing
+	// evaluation when not NULL; the per-element state in; a pointer kept for the evaluation; the per-element state out,
+	// written when not NULL; two output lists; and the output container of the evaluation (at most 10000 entries). A NULL
+	// pSmartProp evaluates nothing
 	virtual void EvaluateSmartProp( ISmartPropEvaluationEnvironment *pEnvironment, ISmartProp *pSmartProp, const CTransform &transform, const Color &color,
-		const void *pVariableValues, const void *pUnk1, const void *pShapes, const void *pElementStateIn, void *pUnk2,
+		const void *pVariableValues, const void *pUnk1, const CUtlVector< SmartPropShapeUnk_t > *pShapes, const void *pElementStateIn, void *pUnk2,
 		void *pElementStateOut, void *pUnk3, void *pUnk4, void *pOutput ) = 0;
 };
 
