@@ -20,6 +20,7 @@
 #include "tier0/platform.h"
 
 class CBaseToolPlane;
+class CBaseToolSlider;
 class CHammerEditorSession;
 class CMapView;
 class QCursor;
@@ -249,6 +250,60 @@ public:
 	bool m_unk024;
 	// AMNOTE: The last position of the drag
 	Vector m_unk025;
+};
+
+// AMNOTE: The undoable state of a CBaseToolSlider: the slider value
+class CBaseToolSliderState : public CBaseUndoable
+{
+public:
+	// AMNOTE: unk001, unk002 and the destructor are the class's own; the others keep CBaseUndoable's default bodies
+	virtual IUndoable *unk001() override;
+	virtual void unk002( IUndoable *pSource ) override;
+	virtual void unk003() override;
+	virtual void unk004() override;
+	virtual void unk005() override;
+	virtual void unk006( bool bUnk ) override;
+	virtual void unk007() override;
+	virtual bool unk008() override;
+	virtual void *unk009() override;
+	virtual void unk0010( void *pUnk ) override;
+	virtual int unk0011() override;
+	virtual void unk0012() override;
+	virtual ~CBaseToolSliderState();
+
+public:
+	// AMNOTE: The tool the state belongs to, NULL in a snapshot; restoring a snapshot into it calls the tool's unk021 with
+	// m_unk121
+	CBaseToolSlider *m_pTool;
+	// AMNOTE: The slider value
+	Vector2D m_unk121;
+};
+
+// AMNOTE: Incomplete class, only the slider state and the drag state are known. A tool that adjusts a two-component
+// value by dragging in a view. The class has no table of its own, so whether the slots of its one derived tool after
+// unk021 are declared here is not known
+class CBaseToolSlider : public CBaseTool
+{
+public:
+	// AMNOTE: The slider value changed to vecValue, by a drag or an undo or redo
+	virtual void unk021( const Vector2D &vecValue ) = 0;
+
+public:
+	// AMNOTE: Holds the live slider value
+	CBaseToolSliderState m_unk021;
+	// AMNOTE: The value when the drag began
+	Vector2D m_unk022;
+	// AMNOTE: The value the drag accumulates before it is snapped to the grid
+	Vector2D m_unk023;
+	// AMNOTE: The cursor positions when the drag began and at its last step
+	Vector2D m_unk024;
+	Vector2D m_unk025;
+	// AMNOTE: The lower and upper bounds the slider shows, grown by doubling until they hold the value
+	Vector2D m_unk026;
+	Vector2D m_unk027;
+	// AMNOTE: The slider bar under the cursor or dragged: 0 none, 1 the x bar (a drag keeps the y of m_unk022), 2 the y bar
+	// (a drag keeps its x)
+	int m_unk028;
 };
 
 #endif // BASETOOL_H
