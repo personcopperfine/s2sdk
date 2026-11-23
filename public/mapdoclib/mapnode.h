@@ -13,6 +13,7 @@
 #include "datamodel/dmattribute.h"
 #include "datamodel/dmelement.h"
 #include "mathlib/vector.h"
+#include "mathlib/vector2d.h"
 #include "mathlib/mathlib.h"
 #include "mathlib/vmatrix.h"
 #include "mathlib/vplane.h"
@@ -26,6 +27,7 @@
 class CBaseHelper;
 class CMapNode;
 class CToolRenderContext;
+class IToolRenderableViewHost;
 class ITransformationBaseline;
 
 // AMNOTE: Name and layout not known, 8 bytes
@@ -56,10 +58,39 @@ public:
 	virtual void unk006( float ) = 0;
 };
 
+// AMNOTE: Placeholder name; an 80-byte entry of PickContextUnk_t, built from the view and the tested position
+struct ALIGN16 PickContextRayUnk_t
+{
+	uint8 m_unk001[80];
+} ALIGN16_POST;
+
+// AMNOTE: Placeholder name; a hit a hit test adds to PickContextUnk_t, 208 bytes
+struct PickContextHitUnk_t
+{
+	uint64 m_unk001[26];
+};
+
+// AMNOTE: Placeholder name; what a map view's hit test hands the tools and the IHitTestable objects it asks
+struct PickContextUnk_t
+{
+	// AMNOTE: The view that tests, a CMapView
+	IToolRenderableViewHost *m_unk001;
+	// AMNOTE: The tested position in the view
+	Vector2D m_unk002;
+	// AMNOTE: Set by the constructor
+	bool m_unk003;
+	// AMNOTE: The hit-test mask the view's caller passes
+	int m_unk004;
+	CUtlVectorFixedGrowable< PickContextRayUnk_t, 4 > m_unk005;
+	// AMNOTE: The hits; the view sorts them into its caller's result
+	CUtlVectorFixedGrowable< PickContextHitUnk_t, 64 > m_unk006;
+};
+
 abstract_class IHitTestable
 {
 public:
-	virtual void unk001( void * ) = 0;
+	// AMNOTE: Adds the object's hits to pContext
+	virtual void unk001( PickContextUnk_t *pContext ) = 0;
 	virtual bool unk002() = 0;
 	virtual bool unk003() = 0;
 	virtual bool unk004() = 0;
