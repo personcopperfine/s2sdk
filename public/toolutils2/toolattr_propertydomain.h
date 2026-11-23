@@ -16,6 +16,26 @@
 
 class IBaseToolAttr;
 
+// AMNOTE: Placeholder name: what BeginModify hands to the domain's listener
+struct ToolAttrDomainModifyUnk_t
+{
+	const PropEdAttrUnk_t *m_pAttrs;
+	int m_nAttrs;
+	PropEdModifyType_t m_nType;
+};
+
+// Told about the edits a CToolAttrPropertyDomain makes
+abstract_class IToolAttrDomainListener
+{
+public:
+	// AMNOTE: BeginModify
+	virtual void unk001( const ToolAttrDomainModifyUnk_t &modify ) = 0;
+	// AMNOTE: EndModify
+	virtual void unk002( const PropEdModifyType_t &nType ) = 0;
+	// AMNOTE: An edit set the attribute's value on the target, for an attribute whose IBaseToolAttr::unk1048 is true
+	virtual void unk003( HToolAttrTableInstance target, IBaseToolAttr *pAttr ) = 0;
+};
+
 // AMNOTE: Incomplete class
 class CToolAttrPropertyDomain : public IPropertyEditDomain
 {
@@ -26,7 +46,8 @@ public:
 	virtual bool unk012() { return false; }
 
 public:
-	uint64 m_unk001;
+	// AMNOTE: NULL by default
+	IToolAttrDomainListener *m_unk001;
 	bool m_bEditorRebuildNeeded;
 	// AMNOTE: True by default
 	bool m_unk101;
