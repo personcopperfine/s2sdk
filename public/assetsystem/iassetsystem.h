@@ -400,8 +400,8 @@ public:
 	virtual void FindAssetsInText( const char *pszText, CUtlVector< IAsset * > *pAssets ) = 0;
 	// The assets' names, one per line
 	virtual void AssetNamesToString( const CUtlVector< IAsset * > &assets, CUtlString *pOut ) = 0;
-	// 0 is "Game", 1 is "Content"
-	virtual const char *GetSearchPathTypeName( int nSearchPathType ) = 0;
+	// "Game" or "Content"
+	virtual const char *GetSearchPathTypeName( AssetLocation_t nLocation ) = 0;
 	virtual IAssetType *FindAssetTypeByExtension( const CUtlString &extension ) = 0;
 	virtual IAssetType *FindAssetTypeByExtensionPsz( const char *pszExtension ) = 0;
 	// Case-insensitive
@@ -432,7 +432,7 @@ public:
 	// Handles file changes, finished compiles, the listeners and the queued reloads
 	virtual void RunFrame() = 0;
 	// Opens the assets' files for edit in Perforce; assets in a read-only mod are skipped
-	virtual void OpenForEdit( const CUtlVector< IAsset * > &assets, int nSearchPathType ) = 0;
+	virtual void OpenForEdit( const CUtlVector< IAsset * > &assets, AssetLocation_t nLocation ) = 0;
 
 	// AMNOTE: Return start-up settings
 	virtual bool unk201() = 0;
@@ -464,7 +464,7 @@ public:
 	virtual const char *GetModName( int nMod ) = 0;
 	virtual bool IsModHidden( int nMod ) = 0;
 	// Replaces the list's contents with the root path of every mod that is not hidden
-	virtual void GetSearchPathRoots( int nSearchPathType, CUtlVector< CUtlString > *pPaths ) = 0;
+	virtual void GetSearchPathRoots( AssetLocation_t nLocation, CUtlVector< CUtlString > *pPaths ) = 0;
 
 	// AMNOTE: Does nothing; its arguments are not known
 	virtual void unk501() = 0;
