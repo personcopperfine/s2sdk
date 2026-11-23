@@ -14,10 +14,102 @@
 #include "appframework/iappsystem.h"
 #include "tier0/utlbuffer.h"
 #include "tier0/utlstring.h"
+#include "tier0/utlvector.h"
 
 class CModelDoc;
 class CModelDocNode;
-class IModelDocLoaderUtils;
+
+//-----------------------------------------------------------------------------
+// The sink the ModelDoc library reports the errors and warnings of a load,
+// a resolve or a compile to
+//-----------------------------------------------------------------------------
+abstract_class IModelDocErrorHandler
+{
+public:
+	virtual bool HasErrors() = 0;
+	virtual bool HasWarnings() = 0;
+	// pNode is the node the message is about, or NULL
+	virtual void ReportError( CModelDocNode *pNode, const char *pszMessage ) = 0;
+	virtual void ReportWarning( CModelDocNode *pNode, const char *pszMessage ) = 0;
+
+	// AMNOTE: A stack of nodes the library pushes and pops; a message reported without a node is reported for the last one
+	CUtlVector< CModelDocNode * > m_unk001;
+};
+
+// What IModelDocLoaderUtils loads a file as
+// AMNOTE: The binary names only the type; the enumerators' names are not known
+enum LoaderDataType_t
+{
+	// AMNOTE: Loads nothing
+	LOADER_DATA_TYPE_UNK0 = 0,
+	LOADER_DATA_TYPE_MESH,				// A source mesh: FBX, DMX, SMD or OBJ
+	LOADER_DATA_TYPE_ANIMATION,			// A source animation: DMX, FBX, SMD or RTS
+	LOADER_DATA_TYPE_MODELDOC,			// A ModelDoc document or prefab
+	LOADER_DATA_TYPE_GEOMETRY_CACHE,	// An Alembic archive
+	// AMNOTE: Loads nothing
+	LOADER_DATA_TYPE_UNK5,
+	// AMNOTE: A source animation too, loaded with a flag the animation loader sets for it
+	LOADER_DATA_TYPE_UNK6,
+};
+
+//-----------------------------------------------------------------------------
+// Told about every file IModelDocLoaderUtils is asked to load
+//-----------------------------------------------------------------------------
+abstract_class ILoaderUtilsListener
+{
+public:
+	// pszPath is the path LoadFile was given, before the cache is searched
+	virtual void OnLoadFile( const char *pszPath, LoaderDataType_t nType ) = 0;
+};
+
+// AMNOTE: Which of IModelDocLoaderUtils' virtuals belong to this base is not known, only their order
+abstract_class IModelDocProcessingCache
+{
+public:
+	// AMNOTE: The document kept under pKey in the table named pszTable, or NULL
+	virtual CModelDoc *unk001( const char *pszTable, const void *pKey ) = 0;
+	// AMNOTE: Keeps pDoc under pKey in the table named pszTable and owns it: the document kept there before is deleted,
+	// and a full table (8 documents) deletes its least recently used one
+	virtual void unk002( const char *pszTable, const void *pKey, CModelDoc *pDoc ) = 0;
+};
+
+//-----------------------------------------------------------------------------
+// The loader and cache of the files a ModelDoc document uses; a file is kept
+// with its path, type and CRC, and a second request for it finds it loaded
+//-----------------------------------------------------------------------------
+abstract_class IModelDocLoaderUtils : public IModelDocProcessingCache
+{
+public:
+	// Loads a file into a new document, or finds it loaded and unchanged, and adds a reference to it;
+	// returns its index, or -1. pszPath is relative to the content roots, pErrors may be NULL.
+	// AMNOTE: pszUnk is part of what a loaded file is matched by. With nUnk 1 the messages of a file found
+	// loaded are reported for the nodes they were reported for, otherwise for the last node of pErrors
+	virtual int LoadFile( const char *pszPath, LoaderDataType_t nType, IModelDocErrorHandler *pErrors, const char *pszUnk, int nUnk ) = 0;
+	// Removes a reference LoadFile added; a file that changed on disk is freed with its last reference
+	virtual void ReleaseFile( int nIndex ) = 0;
+	// The document the file was loaded into; NULL for a bad index
+	virtual CModelDoc *GetFileDocument( int nIndex ) = 0;
+	// The file's path on disk; NULL for a bad index
+	virtual const char *GetFilePath( int nIndex ) = 0;
+	// Whether the file was loaded as nType from pszPath and its CRC on disk is still the same
+	virtual bool IsFileCurrent( int nIndex, LoaderDataType_t nType, const char *pszPath ) = 0;
+
+	// AMNOTE: The object unk121 keeps; LoadFile calls two of its virtuals with the path of every file it returns
+	// and with each of that file's strings
+	virtual void *unk111() = 0;
+	// AMNOTE: The strings a file was loaded with; the count and a string, 0 and NULL for a bad index
+	virtual int unk112( int nIndex ) = 0;
+	virtual const char *unk113( int nIndex, int nString ) = 0;
+
+	// A listener is added once
+	virtual void AddListener( ILoaderUtilsListener *pListener ) = 0;
+	virtual void RemoveListener( ILoaderUtilsListener *pListener ) = 0;
+
+	// Appends the files a DMX source (its makefile) or an FBX source pulls in to pOut; pErrors may be NULL
+	virtual void GetAdditionalRelatedFiles( CUtlVector< CUtlString > *pOut, const char *pszPath, IModelDocErrorHandler *pErrors ) = 0;
+
+	virtual void unk121( void *pObject ) = 0;
+};
 
 //-----------------------------------------------------------------------------
 // The ModelDoc utilities ("ModelDocUtils001")

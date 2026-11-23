@@ -49,6 +49,18 @@ public:
 
 class CUndoHistory;
 
+abstract_class IUndoDoc
+{
+public:
+	// AMNOTE: Removes the node pUndoable from the document
+	virtual void unk001( IUndoable *pUndoable ) = 0;
+	// AMNOTE: Adds the node pUndoable back under pParent at nIndex among its children; CMapDoc puts it under no node when
+	// pParent is NULL, CModelDoc under its root node
+	virtual void unk002( IUndoable *pUndoable, IUndoable *pParent, int nIndex ) = 0;
+	// AMNOTE: Called on an undo or redo with the history the step moves to; CMapDoc records its selection into it
+	virtual void unk003( CUndoHistory *pHistory ) = 0;
+};
+
 // AMNOTE: Placeholder name; a step of an undo history (the label the Edit menu shows and the undoables it records)
 struct UndoGroup_t
 {
@@ -80,7 +92,9 @@ public:
 
 public:
 	CUtlVector< UndoGroup_t * > m_unk001;
-	uint8 m_unk002[96];
+	uint8 m_unk002[88];
+	// AMNOTE: The document whose IUndoDoc methods the history calls; NULL until the owner sets it
+	IUndoDoc *m_pDoc;
 	// AMNOTE: The history that receives the undone steps (the redo history of the undo history and back)
 	CUndoHistory *m_pPartner;
 	uint8 m_unk101[1064];

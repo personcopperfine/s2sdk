@@ -12,9 +12,9 @@
 
 #include "appframework/iappsystem.h"
 #include "tier0/utlstring.h"
+#include "toolscenenodes/toolscene.h"
 
 class CToolScene;
-class CToolSceneNode;
 
 //-----------------------------------------------------------------------------
 // A map (.vmap) and its 3D skybox map shown in a tool scene

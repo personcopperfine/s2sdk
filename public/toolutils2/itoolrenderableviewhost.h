@@ -46,13 +46,14 @@ public:
 	virtual ToolRenderableViewHostUnk8_t unk104() = 0;
 	virtual void unk105( void *, void * ) = 0;
 	virtual void unk106( void *, void * ) = 0;
-	virtual int unk107( float *, int *, int, int, int * ) = 0;
-	// AMNOTE: Copies 208 bytes to the second argument on success
-	virtual bool unk108( void *, void * ) = 0;
+	// AMNOTE: Picks under pPos into pHits, a CUtlVector of 208-byte hits; returns the hit count
+	virtual int unk107( float *pPos, int *pHits, int nUnk, int nUnk2, int *pUnk ) { return 0; }
+	// AMNOTE: unk107 with the same arguments, copies the first hit (208 bytes) to pHit; returns the hit count
+	virtual int unk108( float *pPos, void *pHit, int nUnk, int nUnk2, int *pUnk ) { return 0; }
 	// AMNOTE: nTag is an 8-character tag ("tagvis", "viewport")
-	virtual bool unk109( uint64 nTag, void *pOut ) = 0;
-	virtual int unk1010() = 0;
-	virtual void *unk1011() = 0;
+	virtual bool unk109( uint64 nTag, void *pOut ) { return false; }
+	virtual int unk1010() { return 0; }
+	virtual void *unk1011() { return NULL; }
 };
 
 #endif // ITOOLRENDERABLEVIEWHOST_H

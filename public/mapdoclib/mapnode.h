@@ -13,6 +13,7 @@
 #include "datamodel/dmattribute.h"
 #include "datamodel/dmelement.h"
 #include "mathlib/vector.h"
+#include "mathlib/vector2d.h"
 #include "mathlib/mathlib.h"
 #include "mathlib/vmatrix.h"
 #include "mathlib/vplane.h"
@@ -23,8 +24,10 @@
 #include "toolutils2/toolattr.h"
 #include "toolutils2/undohistory.h"
 
+class CBaseHelper;
 class CMapNode;
 class CToolRenderContext;
+class IToolRenderableViewHost;
 class ITransformationBaseline;
 
 // AMNOTE: Name and layout not known, 8 bytes
@@ -55,17 +58,56 @@ public:
 	virtual void unk006( float ) = 0;
 };
 
+// AMNOTE: Placeholder name; an 80-byte entry of PickContextUnk_t, built from the view and the tested position
+struct ALIGN16 PickContextRayUnk_t
+{
+	uint8 m_unk001[80];
+} ALIGN16_POST;
+
+// AMNOTE: Placeholder name; a hit a hit test adds to PickContextUnk_t, 208 bytes
+struct PickContextHitUnk_t
+{
+	uint64 m_unk001[26];
+};
+
+// AMNOTE: Placeholder name; what a map view's hit test hands the tools and the IHitTestable objects it asks
+struct PickContextUnk_t
+{
+	// AMNOTE: The view that tests, a CMapView
+	IToolRenderableViewHost *m_unk001;
+	// AMNOTE: The tested position in the view
+	Vector2D m_unk002;
+	// AMNOTE: Set by the constructor
+	bool m_unk003;
+	// AMNOTE: The hit-test mask the view's caller passes
+	int m_unk004;
+	CUtlVectorFixedGrowable< PickContextRayUnk_t, 4 > m_unk005;
+	// AMNOTE: The hits; the view sorts them into its caller's result
+	CUtlVectorFixedGrowable< PickContextHitUnk_t, 64 > m_unk006;
+};
+
 abstract_class IHitTestable
 {
 public:
-	virtual void unk001( void * ) = 0;
+	// AMNOTE: Adds the object's hits to pContext
+	virtual void unk001( PickContextUnk_t *pContext ) = 0;
 	virtual bool unk002() = 0;
 	virtual bool unk003() = 0;
 	virtual bool unk004() = 0;
 	virtual void *unk005() = 0;
 	virtual void unk006() = 0;
-	virtual bool unk007() = 0;
+	// AMNOTE: True when it wrote its value to pUnk
+	virtual bool unk007( int *pUnk ) = 0;
 	virtual void *unk008() = 0;
+};
+
+// A helper the editor's manipulators act on
+abstract_class IManipulatorTarget
+{
+public:
+	// AMNOTE: The bind target name of the helper's manipulator ("BoxManipulator", "sphereManipulator", "gizmo"), NULL when it has
+	// none. No call site found, the arguments are not proven
+	virtual const char *unk001() = 0;
 };
 
 abstract_class ITransformable
@@ -137,7 +179,7 @@ public:
 	Vector m_Scales;
 };
 
-// AMNOTE: Incomplete class, only the parent and the children are known
+// AMNOTE: Incomplete class, only the helpers, the parent and the children are known
 class CMapNode : public CMapPoint, public IUndoable, public IToolRenderCallbacks, public IHitTestable, public ITransformable, public IMapNodeToolAttrRoot, public IToolAttrNotifyRoot, public IRaytraceEnvironmentOwner
 {
 public:
@@ -203,7 +245,7 @@ public:
 	virtual void unk2321( void * ) = 0;
 	virtual void unk2322( void *, int ) = 0;
 	virtual void unk2323() = 0;
-	virtual void unk2324( void * ) = 0;
+	virtual void unk2324( int ) = 0;
 	virtual void unk2325( void *, bool ) = 0;
 	virtual void unk2326( void * ) = 0;
 	virtual bool unk2327() = 0;
@@ -349,7 +391,7 @@ public:
 	virtual bool unk4350( void * ) = 0;
 	virtual void unk4351( void *, void *, void * ) = 0;
 	virtual float unk4352() = 0;
-	virtual void unk4353( void *, void *, void *, void *, void *, void *, void *, void * ) = 0;
+	virtual void unk4353( void *, int, void *, void *, void *, void *, void *, void * ) = 0;
 	virtual bool unk4354() = 0;
 	virtual void *unk4355() = 0;
 	virtual int unk4356() = 0;
@@ -376,7 +418,9 @@ public:
 	virtual void unk4377( void *, int, void * ) = 0;
 
 public:
-	uint8 m_unk031[152];
+	uint8 m_unk031[128];
+	// AMNOTE: The node's helpers; they are not children
+	CUtlVector< CBaseHelper * > m_unk032;
 	CMapNode *m_pParent;
 	uint8 m_unk131[88];
 	CUtlVector< DmElementHandle_t > m_Children;

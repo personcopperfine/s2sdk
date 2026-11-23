@@ -10,10 +10,12 @@
 #pragma once
 #endif
 
+#include "assetsystem/iassetsystem.h"
 #include "toolutils2/baseeditorsession.h"
 #include "toolutils2/ibindtarget.h"
 #include "toolutils2/itoolsresourcelistener.h"
 #include "mapdoclib/mapdoc.h"
+#include "hammer/toolmanager.h"
 #include "tier0/utlstring.h"
 #include "tier0/platform.h"
 
@@ -35,12 +37,6 @@ abstract_class IBindableCommandListener
 {
 public:
 	virtual void unk001( int, void *, int ) = 0;
-};
-
-abstract_class IAssetFileListener
-{
-public:
-	virtual void unk001( int * ) = 0;
 };
 
 abstract_class IMapDocSession
@@ -73,10 +69,12 @@ public:
 	virtual const CUtlString &GetMapFilePath() = 0;
 
 public:
-	uint8 m_unk011[176];
+	uint8 m_unk011[160];
+	CToolManager *m_pToolManager;
+	uint8 m_unk111[8];
 	CMapViewMgr *m_pViewMgr;
 	CMapDocSession *m_pDocSession;
-	uint8 m_unk111[296];
+	uint8 m_unk211[296];
 };
 
 #endif // HAMMEREDITORSESSION_H

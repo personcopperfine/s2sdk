@@ -193,7 +193,8 @@ public:
 	virtual CVMMDAssetTypeInfo *unk108() = 0;
 
 public:
-	uint64 m_unk001;
+	// AMNOTE: Not a schema field; IAssetType::unk402 returns it
+	CUtlString m_unk001;
 
 	CUtlString m_FriendlyName;
 	CUtlString m_Ext;
