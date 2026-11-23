@@ -46,8 +46,8 @@ public:
 	virtual bool unk004( const HToolAttrTableInstance &key, CUtlString *pText ) = 0;
 	// AMNOTE: The name of the target
 	virtual const char *unk005( const HToolAttrTableInstance &key ) = 0;
-	virtual bool unk006() = 0;
-	virtual bool unk007() = 0;
+	virtual bool unk006( const HToolAttrTableInstance &key ) = 0;
+	virtual bool unk007( const HToolAttrTableInstance &key ) = 0;
 	virtual bool unk008() = 0;
 	virtual HToolAttrTableInstance unk009( const HToolAttrTableInstance &key ) = 0;
 	virtual void unk0010( const HToolAttrTableInstance &key, void *pUnk ) = 0;
